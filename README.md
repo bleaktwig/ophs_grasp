@@ -1,19 +1,19 @@
 # ophs_grasp
 A GRASP algorithm to solve the Orienteering Problem with Hotel Selection
 
-#####Orienteering Problem with Hotel Selection
+##### Orienteering Problem with Hotel Selection
 The Orienteering Problem with Hotel Selection (OPHS) is a problem proposed by (**TODO**: REFERENCE) Divsalar et. al., which expands on the original Orienteering Problem by also adding the selection of Hotels where the traveler must rest while visiting the Points of Interest.
 
-#####Greedy Randomized Adaptive Search Procedure
+##### Greedy Randomized Adaptive Search Procedure
 A Greedy Randomized Adaptive Search Procedure (GRASP) is a metaheuristic algorithm that consists of iterations made up from successive constructions of a greedy randomized solution and subsequent iterative improvements of it through a local search.
 
-#####GRASP applied on OPHS
+##### GRASP applied on OPHS
 * **TODO**
 
-#####Instances
+##### Instances
 * **TODO**: point to where they are and where their format is explained.
 
-#####Running:
+##### Running:
 The C++ code is inside the `ophs_grasp/algorithm` directory and its compiled output is stored in the `ophs_grasp/algorithm/output` directory. The parameters given to it are:
 * **TODO**: Usage
 
