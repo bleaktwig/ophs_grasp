@@ -25,6 +25,8 @@ void tourGreedyRandomizedConstruction(
         //       poi to the line created between two hotels as the score for
         //       each. This also eliminates the necessity for the tempScore
         //       variable.
+        // TODO: maybe just maximize usable distances instead of calcullating
+        //       each hotel score.
 
         // calculate temporary score
         for (unsigned int j = 0; j < candidateHotels.size(); ++j)

@@ -10,10 +10,10 @@ void printVariables(unsigned int tripsSize, double *tripsLength,
         printf("index%u: %.2f\n", i, tripsLength[i]);
     printf("\n------- Hotels: ---------------------------\n");
     for (unsigned int i = 0; i < hotelsSize; ++i)
-        printf("hotel%d: %.2f %.2f - %.2f\n", i, vertices[i].x, vertices[i].y, vertices[i].score);
+        printf("hotel%u: %.2f %.2f - %.2f\n", i, vertices[i].x, vertices[i].y, vertices[i].score);
     printf("\n------- POIs: -----------------------------\n");
     for (unsigned int i = hotelsSize; i < hotelsSize + poisSize; ++i)
-        printf("poi%d: %.2f %.2f - %.2f\n", i, vertices[i].x, vertices[i].y, vertices[i].score);
+        printf("poi%u: %.2f %.2f - %.2f\n", i, vertices[i].x, vertices[i].y, vertices[i].score);
     return;
 }
 void printMatrix(unsigned int hotelsSize, unsigned int poisSize, double **distancesMatrix) {

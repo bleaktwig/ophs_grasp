@@ -1,0 +1,37 @@
+***********************
+* OPHS test instances *
+***********************
+
+The first line contains the following data: 
+
+	N H D
+
+Where
+	N 	= number of vertices + 2
+	H	= number of extra hotels (total number of hotels excluding initial and final ones) 
+	D	= number of trips
+
+The second line contains:
+ 
+	Tmax	= total tour length
+
+The third line contains:
+
+	Td	= trip length for each trip d
+
+The remaining lines contain data about location and score:
+
+	x y Si
+
+Where
+	x	= x coordinate 
+	y	= y coordinate
+	Si	= score
+
+	the first line is the starting hotel
+	the second line is the ending hotel
+	the next "H" lines are the extra hotels
+	the remaining lines (N-2) are the vertices
+	
+* REMARKS *
+	- The Euclidian distance is used.

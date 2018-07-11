@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # script for compiling the algorithm and running all the instances contained in
 #   the algorithm/instances directory. Giving the script an input from 1 to 5
 #   will select which set of instances directories to run, from the SET1
@@ -15,6 +16,13 @@ RUN="./algorithm/output/main"
 RUNFLAGS=
 RUN="$RUN $RUNFLAGS"
 
+function formatOutput () {
+    y="${1%.ophs}.out"
+    y="out/${y#instances/}"
+    echo $y
+    return 0
+}
+
 STARTTIME=$(date +%s%N)
 
 # TODO: make so that this line is only executed if a "-c" flag is set.
@@ -27,17 +35,10 @@ then
     echo "============================="
     echo " + executing SET 1..."
     echo "============================="
-    for f in $INSTANCESDIR/SET1\ 1-2/*
+
+    for f in $INSTANCESDIR/SET1\ */*
     do
-        $RUN "$f"
-    done
-    for f in $INSTANCESDIR/SET1\ 2-3/*
-    do
-        $RUN "$f"
-    done
-    for f in $INSTANCESDIR/SET1\ 3-4/*
-    do
-        $RUN "$f"
+        $RUN "$f" "$(formatOutput "$f")"
     done
 fi
 
@@ -46,13 +47,9 @@ then
     echo "============================="
     echo " + executing SET 2..."
     echo "============================="
-    for f in $INSTANCESDIR/SET2\ 5-3/*
+    for f in $INSTANCESDIR/SET2\ */*
     do
-        $RUN "$f"
-    done
-    for f in $INSTANCESDIR/SET2\ 6-4/*
-    do
-        $RUN "$f"
+        $RUN "$f" "$(formatOutput "$f")"
     done
 fi
 
@@ -61,13 +58,9 @@ then
     echo "============================="
     echo " + executing SET 3..."
     echo "============================="
-    for f in $INSTANCESDIR/SET3\ 10-4/*
+    for f in $INSTANCESDIR/SET3\ */*
     do
-        $RUN "$f"
-    done
-    for f in $INSTANCESDIR/SET3\ 12-5/*
-    do
-        $RUN "$f"
+        $RUN "$f" "$(formatOutput "$f")"
     done
 fi
 
@@ -78,8 +71,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET4/*
     do
-        echo "$f"
-        $RUN "$f"
+        $RUN "$f" "$(formatOutput "$f")"
     done
 fi
 
@@ -88,41 +80,9 @@ then
     echo "============================="
     echo " + executing SET 5..."
     echo "============================="
-    for f in $INSTANCESDIR/SET5\ 10-5/*
+    for f in $INSTANCESDIR/SET5\ */*
     do
-        $RUN "$f"
-    done
-    for f in $INSTANCESDIR/SET5\ 10-6/*
-    do
-        $RUN "$f"
-    done
-    for f in $INSTANCESDIR/SET5\ 12-4/*
-    do
-        $RUN "$f"
-    done
-    for f in $INSTANCESDIR/SET5\ 12-6/*
-    do
-        $RUN "$f"
-    done
-    for f in $INSTANCESDIR/SET5\ 15-4/*
-    do
-        $RUN "$f"
-    done
-    for f in $INSTANCESDIR/SET5\ 15-5/*
-    do
-        $RUN "$f"
-    done
-    for f in $INSTANCESDIR/SET5\ 15-6/*
-    do
-        $RUN "$f"
-    done
-    for f in $INSTANCESDIR/SET5\ 15-8/*
-    do
-        $RUN "$f"
-    done
-    for f in $INSTANCESDIR/SET5\ 15-10/*
-    do
-        $RUN "$f"
+        $RUN "$f" "$(formatOutput "$f")"
     done
 fi
 ENDTIME=$(date +%s%N)

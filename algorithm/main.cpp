@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <fstream>
-#include <string>
 #include <vector>
 #include <time.h>
 #include <string.h>
@@ -9,8 +7,7 @@
 #include "trip.h"
 #include "hotelGrasp.h"
 #include "poiGrasp.h"
-//#include "fileIO.h"
-//  #ifndef GRASP_FILEIO_H
+#include "fileIO.h"
 #include "userIO.h"
 
 /* TODO: write a description for each function in a standard C way.
@@ -21,31 +18,14 @@
  * TODO: tours should be a struct themselves, with a trips vector (or dynamic
  *          array) and a score.
  * TODO: trips should only contain a vertex's index, not the entire struct.
- * TODO: use shorter names, like v for the vertices array and t for the tours
- *          array, this will lead to less verbose and more readable code in the
- *          long run.
  * TODO: test separating the hotel selection to the poi selection in two diffe-
  *          rent for loops. It might work better. For the hotel selection, try
  *          maximizing the usable distance and the trip potential score (or ho-
  *          tel score if I'm lazy).
  * TODO: upgrade the file output so that it also shows the total score collected
  *          in each individual trip as well as for the whole tour.
- * TODO: separate this main.cpp into different files connected through .hpp
- *          and write a make to compile it all.
  */
 
-void writeTours(unsigned int tripsSize, struct Trip *tour, const char* inFile) {
-    std::ofstream out;
-    out.open (inFile, std::ofstream::out | std::ofstream::trunc);
-    for (unsigned int i = 0; i < tripsSize; ++i) {
-        out << tour[i].start.index << " "; // write trip's start hotel
-        for (unsigned int j = 0; j < tour[i].poiList.size(); ++j)
-            out << tour[i].poiList[j].index << " "; // write trip's pois
-        out << tour[i].end.index << "\n"; // write trip's end hotel
-    }
-    out.close();
-    return;
-}
 int main(int argc, char* argv[]) {
     /* TODO: argument handling
      *  inFile with a default file chosen if none is given
@@ -56,11 +36,10 @@ int main(int argc, char* argv[]) {
      *  PoiRCLSize with a default of 3
      *  Debug flag with a default of false, with 1 meaning normal and 2 meaning verbose
      */
-    unsigned int iterNumber = 10;
-
-    unsigned int HotelRCLSize = 3;
-    unsigned int PoiRCLSize = 3;
-    unsigned int debug = 0;
+    uint iterNumber = 1;
+    uint HotelRCLSize = 3;
+    uint PoiRCLSize = 3;
+    uint debug = 2;
 
     srand(time(NULL)); // TODO: a flag should handle this
 
@@ -71,81 +50,35 @@ int main(int argc, char* argv[]) {
         outFile = argv[2];
     }
     else {
-        fprintf(stderr, "Usage: Exiting...\n"); // TODO: Usage()
+        fprintf(stderr, "Usage:\n Exiting...\n"); // TODO: Usage()
         return 1;
     }
 
     if (!debug) printf("Running on %s...\n", inFile);
 
     // variables used
-    unsigned int tripsSize;
+    uint tripsSize;
+    uint hotelsSize;
+    uint poisSize;
     double *tripsLength;
-    unsigned int hotelsSize;
-    unsigned int poisSize;
     struct Vertex *vertices;
-    // TODO: unsigned int unusedVertices MAYBE NOT REALLY NECESSARY;
 
 // === FILE READING ============================================================
-    { // file reading TODO: move to its own function maybe.
-        std::ifstream infile(inFile);
-
-        // parameters
-        infile >> poisSize >> hotelsSize >> tripsSize;
-        poisSize -= 2;
-        hotelsSize += 2;
-
-        // tour length
-        double totalTourLength;
-        infile >> totalTourLength;
-
-        // trips length
-        try {
-            tripsLength = new double [tripsSize];
-        } catch(std::bad_alloc) {
-            fprintf(stderr, "Not enough memory allocated. Exiting...\n");
-            return 1;
-        }
-        double distanceCheck = 0.0;
-        for (unsigned int i = 0; i < tripsSize; ++i) {
-            infile >> tripsLength[i];
-            distanceCheck += tripsLength[i];
-        }
-        if (distanceCheck >= (totalTourLength * 1.02) ||
-            distanceCheck <= (totalTourLength * 0.98)) {
-            printf("The given total tour length doesn't correlate with the ");
-            printf("length of each individual trip. The instance given is ");
-            printf("wrong. Exiting...\n");
-            return 1;
-        }
-
-        // hotels and points of interest
-        try {
-            vertices = new struct Vertex [hotelsSize + poisSize];
-        } catch(std::bad_alloc) {
-            printf("Not enough memory allocated. Exiting...\n");
-            return 1;
-        }
-        for (unsigned int i = 0; i < hotelsSize + poisSize; ++i) {
-            vertices[i].index = i;
-            infile >> vertices[i].x >> vertices[i].y >> vertices[i].score;
-        }
-        infile.close();
-    }
+    readInput(&poisSize, &hotelsSize, &tripsSize,
+              &tripsLength, &vertices,
+              inFile);
     if (debug) printf("===========================================\n");
     if (debug) printf("FILE READING OK!\n");
     if (debug == 2) printVariables (tripsSize, tripsLength,
                                     hotelsSize, poisSize, vertices);
-
 // === MATRIX FILLING ==========================================================
-    double **distancesMatrix;
-    try {
-        distancesMatrix = new double *[hotelsSize + poisSize];
-        for (unsigned int i = 0; i < hotelsSize + poisSize; ++i)
-            distancesMatrix[i] = new double[hotelsSize + poisSize];
-    } catch(std::bad_alloc) {
-        fprintf(stderr, "Not enought memory allocated. Exiting...");
-        return 1;
-    }
+    double **distancesMatrix = (double**) malloc(sizeof(double*) * (hotelsSize + poisSize));
+    for (uint i = 0; i < hotelsSize + poisSize; ++i)
+        distancesMatrix[i] = (double*) malloc(sizeof(double) * (hotelsSize + poisSize));
+    // TODO: remove (double **) and (double *)
+    // TODO: move all memory allocation for the matrix to fillMatrix()
+    // TODO: assert that no distanceMatrix pointer is pointing to NULL
+
     fillMatrix(hotelsSize, poisSize, distancesMatrix);
     if (debug) printf("===========================================\n");
     if (debug) printf("MATRIX FILLING OK!\n");
@@ -158,26 +91,27 @@ int main(int argc, char* argv[]) {
     if (debug) printf("HOTEL SCORE CALCULATION OK!\n");
     if (debug == 2) printHotelScores(hotelsSize, vertices);
 
-    struct Trip *bestTour;
-    try {
-        bestTour = new struct Trip [tripsSize];
-    } catch(std::bad_alloc) {
-        fprintf(stderr, "Not enough memory allocated. Exiting...");
-        return 1;
-    }
-    for (unsigned int i = 0; i < tripsSize; ++i) bestTour[i].score = 0.0;
+
+    // struct Trip *bestTour = (struct Trip*) malloc(sizeof(struct Trip) * tripsSize);
+    // TODO: remove: (struct Trip *)
+    struct Trip *bestTour = new struct Trip [tripsSize];
+    // if (bestTour == NULL) {
+    //     fprintf(stderr, "Not enough memory allocated. Exiting...");
+    //     exit(1);
+    // }
+    for (uint i = 0; i < tripsSize; ++i) bestTour[i].score = 0.0;
     double bestTourTotalScore = 0.0;
 
 // === MAIN LOOP ===============================================================
-    for (unsigned int iter = 0; iter < iterNumber; ++iter) {
-        struct Trip *tour;
-        try {
-            tour = new struct Trip [tripsSize];
-        } catch(std::bad_alloc) {
-            fprintf(stderr, "Not enough memory allocated. Exiting...");
-            return 1;
-        }
-        for (unsigned int i = 0; i < tripsSize; ++i) {
+    for (uint iter = 0; iter < iterNumber; ++iter) {
+        // struct Trip *tour = (struct Trip*) malloc(sizeof(struct Trip) * tripsSize);
+        // TODO: remove (struct Trip *)
+        struct Trip *tour = new struct Trip [tripsSize];
+        // if (tour == NULL) {
+        //     fprintf(stderr, "Not enough memory allocated. Exiting...");
+        //     exit(1);
+        // }
+        for (uint i = 0; i < tripsSize; ++i) {
             tour[i].totalLength = tripsLength[i];
             tour[i].remainingLength = tripsLength[i];
             tour[i].score = 0.0;
@@ -193,11 +127,12 @@ int main(int argc, char* argv[]) {
             printf("===========================================\n");
             printf("TOUR HOTEL SELECTION OK!\n");
         }
-        else if (debug == 2 && iter % 100 == 0) {
+        else if (debug == 2 && iter % 100 == 1) {
             printf("===========================================\n");
             printf("iter %d: TOUR HOTEL SELECTION OK!\n", iter);
             printTourHotels(tripsSize, tour, distancesMatrix);
-        }
+        } // TODO: check that I didn't hurt anything by setting iter % 100 == 1
+          //        instead of iter % 100 == 0.
 
 // === TOUR HOTELS LOCAL SEARCH ================================================
         tourLocalSearch(
@@ -207,8 +142,6 @@ int main(int argc, char* argv[]) {
         // printTourHotels(tripsSize, tour);
 
 // === TOUR POIS SELECTION =====================================================
-        // DEBUG: This part of the code produces a Segmentation fault and I
-        //          honestly don't know why it happens.
         tripGreedyRandomizedConstruction(
             tripsSize, tour,
             hotelsSize, poisSize, vertices,
@@ -219,7 +152,7 @@ int main(int argc, char* argv[]) {
             printf("===========================================\n");
             printf("TOUR POI SELECTION OK!\n");
         }
-        else if (debug == 2 && iter % 100 == 0) {
+        else if (debug == 2 && iter % 100 == 1) {
             printf("===========================================\n");
             printf("iter %d: TOUR POI SELECTION OK!\n", iter);
             printTours(tripsSize, bestTour);
@@ -230,35 +163,36 @@ int main(int argc, char* argv[]) {
 
 // === BEST VS CURRENT TOUR COMPARISON =========================================
         double tourTotalScore = 0.0;
-        for (unsigned int i = 0; i < tripsSize; ++i)
+        for (uint i = 0; i < tripsSize; ++i)
             tourTotalScore += tour[i].score;
-        if (debug == 2 && iter % 100 == 0) {
+        if (debug == 2 && iter % 100 == 1) {
             printf("===========================================\n");
             printf("current tour score: %.2f\n", tourTotalScore);
             printf("best tour score:    %.2f\n", bestTourTotalScore);
         }
         if (tourTotalScore > bestTourTotalScore) {
-            for (unsigned int i = 0; i < tripsSize; ++i)
-                bestTour[i] = tour[i];
+            for (uint i = 0; i < tripsSize; ++i)
+                bestTour[i] = tour[i]; // DEBUG
             bestTourTotalScore = tourTotalScore;
         }
+        // free(tour);
         delete[] tour;
     }
 // === OUTPUT FILE WRITING =====================================================
-    // TODO: MAYBE move to it's own function?
-
-    printf("\n%s\n\n", outFile);
-    //writeTours(tripsSize, bestTour, outFile);
+    // writeTours(tripsSize, bestTour, outFile);
 
     if (debug) printf("===========================================\n");
     if (debug) printf("OUTPUT FILE WRITING OK!\n");
 // === MEMORY RELEASING ========================================================
     // TODO: move to it's own function maybe?
-    delete[] tripsLength;
-    delete[] vertices;
-    for (unsigned int i = 0; i < hotelsSize + poisSize; ++i) delete[] distancesMatrix[i];
-    delete[] distancesMatrix;
+
+    free(tripsLength);
+    free(vertices);
+    for (uint i = 0; i < hotelsSize + poisSize; ++i) free(distancesMatrix[i]);
+    free(distancesMatrix);
+    // free(bestTour);
     delete[] bestTour;
+
     if (debug) printf("===========================================\n");
     if (debug) printf("MEMORY RELEASING OK!\n");
     if (debug) printf("===========================================\n");

@@ -3,6 +3,8 @@
 
 #include <cmath>
 
+typedef unsigned int uint;
+
 struct Vertex {
     int index;
     double x;
