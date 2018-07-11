@@ -36,10 +36,10 @@ int main(int argc, char* argv[]) {
      *  PoiRCLSize with a default of 3
      *  Debug flag with a default of false, with 1 meaning normal and 2 meaning verbose
      */
-    uint iterNumber = 1;
+    uint iterNumber = 1000;
     uint HotelRCLSize = 3;
     uint PoiRCLSize = 3;
-    uint debug = 2;
+    uint debug = 0;
 
     srand(time(NULL)); // TODO: a flag should handle this
 
@@ -91,26 +91,15 @@ int main(int argc, char* argv[]) {
     if (debug) printf("HOTEL SCORE CALCULATION OK!\n");
     if (debug == 2) printHotelScores(hotelsSize, vertices);
 
-
-    // struct Trip *bestTour = (struct Trip*) malloc(sizeof(struct Trip) * tripsSize);
-    // TODO: remove: (struct Trip *)
+    // TODO: try - catch
     struct Trip *bestTour = new struct Trip [tripsSize];
-    // if (bestTour == NULL) {
-    //     fprintf(stderr, "Not enough memory allocated. Exiting...");
-    //     exit(1);
-    // }
     for (uint i = 0; i < tripsSize; ++i) bestTour[i].score = 0.0;
     double bestTourTotalScore = 0.0;
 
 // === MAIN LOOP ===============================================================
     for (uint iter = 0; iter < iterNumber; ++iter) {
-        // struct Trip *tour = (struct Trip*) malloc(sizeof(struct Trip) * tripsSize);
-        // TODO: remove (struct Trip *)
+        // TODO: try - catch
         struct Trip *tour = new struct Trip [tripsSize];
-        // if (tour == NULL) {
-        //     fprintf(stderr, "Not enough memory allocated. Exiting...");
-        //     exit(1);
-        // }
         for (uint i = 0; i < tripsSize; ++i) {
             tour[i].totalLength = tripsLength[i];
             tour[i].remainingLength = tripsLength[i];
@@ -175,11 +164,16 @@ int main(int argc, char* argv[]) {
                 bestTour[i] = tour[i]; // DEBUG
             bestTourTotalScore = tourTotalScore;
         }
-        // free(tour);
         delete[] tour;
     }
+    if (debug) {
+        printf("===========================================\n");
+        printf("best found tour in %u iterations:\n", iterNumber);
+        printTours(tripsSize, bestTour);
+        printf("===========================================\n");
+    }
 // === OUTPUT FILE WRITING =====================================================
-    // writeTours(tripsSize, bestTour, outFile);
+    writeTours(tripsSize, bestTour, outFile);
 
     if (debug) printf("===========================================\n");
     if (debug) printf("OUTPUT FILE WRITING OK!\n");
@@ -190,7 +184,6 @@ int main(int argc, char* argv[]) {
     free(vertices);
     for (uint i = 0; i < hotelsSize + poisSize; ++i) free(distancesMatrix[i]);
     free(distancesMatrix);
-    // free(bestTour);
     delete[] bestTour;
 
     if (debug) printf("===========================================\n");

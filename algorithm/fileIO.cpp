@@ -56,6 +56,11 @@ void writeTours(uint tripsSize, struct Trip *tour, const char *file) {
     FILE *out;
     out = fopen(file, "w");
 
+    if (out == NULL) {
+        fprintf(stderr, "Output file name \"%s\"is invalid. Exiting...\n", file);
+        exit(1);
+    }
+
     for (uint i = 0; i < tripsSize; ++i) {
         fprintf(out, "%u ", tour[i].start.index);
         for (uint j = 0; j < tour[i].poiList.size(); ++j)

@@ -12,12 +12,22 @@ COMPILER="g++"
 COMPILERFLAGS="-Wall -g -o"
 COMPILER="$COMPILER $COMPILERFLAGS"
 
-RUN="./algorithm/output/main"
-RUNFLAGS=
-RUN="$RUN $RUNFLAGS"
+CRUN="./algorithm/output/main"
+CRUNFLAGS=
+CRUN="$CRUN $CRUNFLAGS"
+
+PRUN="python3 visualize.py"
+PMODE=1
+
+function formatPython () {
+    y="${1%.ophs}"
+    y="${y#instances/}"
+    echo $y
+    return 0
+}
 
 function formatOutput () {
-    y="${1%.ophs}.out"
+    y="${1%.ophs}.ophsout"
     y="out/${y#instances/}"
     echo $y
     return 0
@@ -38,7 +48,11 @@ then
 
     for f in $INSTANCESDIR/SET1\ */*
     do
-        $RUN "$f" "$(formatOutput "$f")"
+        $CRUN "$f" "$(formatOutput "$f")"
+        if [[ $2 = "1" ]]
+        then
+            $PRUN "$(formatPython "$f")" $PMODE
+        fi
     done
 fi
 
@@ -49,7 +63,11 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET2\ */*
     do
-        $RUN "$f" "$(formatOutput "$f")"
+        $CRUN "$f" "$(formatOutput "$f")"
+        if [[ $2 = "1" ]]
+        then
+            $PRUN "$(formatPython "$f")" $PMODE
+        fi
     done
 fi
 
@@ -60,7 +78,11 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET3\ */*
     do
-        $RUN "$f" "$(formatOutput "$f")"
+        $CRUN "$f" "$(formatOutput "$f")"
+        if [[ $2 = "1" ]]
+        then
+            $PRUN "$(formatPython "$f")" $PMODE
+        fi
     done
 fi
 
@@ -71,7 +93,11 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET4/*
     do
-        $RUN "$f" "$(formatOutput "$f")"
+        $CRUN "$f" "$(formatOutput "$f")"
+        if [[ $2 = "1" ]]
+        then
+            $PRUN "$(formatPython "$f")" $PMODE
+        fi
     done
 fi
 
@@ -82,11 +108,14 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET5\ */*
     do
-        $RUN "$f" "$(formatOutput "$f")"
+        $CRUN "$f" "$(formatOutput "$f")"
+        if [[ $2 = "1" ]]
+        then
+            $PRUN "$(formatPython "$f")" $PMODE
+        fi
     done
 fi
 ENDTIME=$(date +%s%N)
-TIMES=$((($ENDTIME - $STARTTIME)/1000000000))
 TIMEMS=$((($ENDTIME - $STARTTIME)/1000000))
 echo "============================="
 echo "total execution time: $TIMEMS [ms]."

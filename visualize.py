@@ -13,7 +13,7 @@ fin = open("instances/" + fileName + ".ophs", 'r', 1)
 instancesF = fin.read()
 fin.close()
 
-fin = open("out/" + fileName + ".out", 'r', 1)
+fin = open("out/" + fileName + ".ophsout", 'r', 1)
 tourF = fin.read()
 fin.close()
 
