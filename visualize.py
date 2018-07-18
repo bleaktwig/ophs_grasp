@@ -64,6 +64,8 @@ for i in range(0, len(x)):
     if score[i] == 0.0:
         if i == 0:
             plt.scatter(x[i], y[i], s = 100, c = "blue")
+        elif i == 1:
+            plt.scatter(x[i], y[i], s = 100, c = "white")
         else:
             plt.scatter(x[i], y[i], s = 100, c = "red")
     else:

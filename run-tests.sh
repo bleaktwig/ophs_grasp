@@ -8,17 +8,13 @@
 SOURCEDIR="algorithm-c"
 INSTANCESDIR="instances"
 
-# COMPILER="g++"
-# COMPILERFLAGS="-Wall -g -o"
-# COMPILER="$COMPILER $COMPILERFLAGS"
-
 COMPILER="gcc"
 COMPILERFLAGS="-std=c11 -o"
 COMPILER="$COMPILER $COMPILERFLAGS"
 
 CRUN="./algorithm-c/out/main"
 
-ITER_N="1000"
+ITER_N="1"
 H_RCL_SIZE="3"
 RAN="1"
 DEBUG="0"

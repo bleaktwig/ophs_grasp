@@ -1,5 +1,7 @@
 #include "hotel_grasp.h"
 
+// TODO: FOR THE LAST TRIP, I NEED TO REMOVE THE LAST HOTEL ADDED, ADD THE NEW ONE AND THEN ADD IT BACK. THIS HOTEL SHOULD BE THE LAST ONE.
+
 bool tour_grc(uint trips_n, uint hotels_n, uint pois_n, uint rcl,
               vertex *v, double **d_matrix, trip *tour) {
     uintvec_endadd(&tour[0].list, 0);

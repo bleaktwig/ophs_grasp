@@ -112,10 +112,11 @@ int main(int argc, char* argv[]) {
         best_tour[i].tot_len = trips_len[i];
         best_tour[i].rem_len = trips_len[i];
     }
+    // double best_tour_score = 0.0;
 
     uint tour_grc_wack_sols = 0;
     for (uint iter = 0; iter < iters_n; ++iter) {
-        bool scrap = false;
+        // bool scrap = false; TODO
 // === TOUR CREATION ===========================================================
         trip *tour = malloc(sizeof(trip) * (trips_n));
         if (tour == NULL) {
@@ -130,11 +131,15 @@ int main(int argc, char* argv[]) {
         }
         for (uint i = 0; i < hotels_n + pois_n; ++i) v[i].vis = false;
 // === TOUR HOTEL SELECTION ====================================================
-        if (debug && iter%(iters_n-1) == 0 && iter != 0)
-            printf("=== RUNNING TOUR GREEDY RANDOMIZED CONSTRUCTION ==\n");
+        if (debug) {
+            if (iters_n == 1)
+                printf("=== RUNNING TOUR GREEDY RANDOMIZED CONSTRUCTION ==\n");
+            else if (iter%(iters_n-1) == 0 && iter != 0)
+                printf("=== RUNNING TOUR GREEDY RANDOMIZED CONSTRUCTION ==\n");
+        }
         if (tour_grc(trips_n, hotels_n, pois_n, h_rcl, v, d_matrix, tour)) {
             tour_grc_wack_sols += 1;
-            scrap = true;
+            // scrap = true; TODO
         }
 // === TOUR HOTELS LOCAL SEARCH ================================================
 
@@ -143,13 +148,18 @@ int main(int argc, char* argv[]) {
 // === TOUR POIS LOCAL SEARCH ==================================================
 
 // === BEST VS CURRENT TOUR COMPARISON =========================================
+        // print_tour(trips_n, tour, v);
+
+        write_output(trips_n, tour, v, outfile);
+
         // TODO: remember that copying the trip with uintvec is not trivial.
         for (uint i = 0; i < trips_n; ++i) uintvec_free(&tour[i].list);
         free(tour);
     }
+
     if (tour_grc_wack_sols > 0)
-        printf("    %04u/%u solutions were scrapped by the tour grc.\n",
-               tour_grc_wack_sols, iters_n);
+        printf("    %u/%u solutions were scrapped by the tour grc.\n",
+                tour_grc_wack_sols, iters_n);
 // === OUTPUT FILE WRITING =====================================================
     // if (!debug) printf("OK!\n");
     // if (!debug) printf("Writing to \"%s\"...    ", outfile);

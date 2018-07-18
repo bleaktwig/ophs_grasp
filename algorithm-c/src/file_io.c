@@ -55,22 +55,20 @@ void read_input(const char *file, uint *trips_n, uint *hotels_n, uint *pois_n,
     fclose(in);
     return;
 }
-// void writeTours(uint tripsSize, struct Trip *tour, const char *file) {
-//     FILE *out;
-//     out = fopen(file, "w");
-//
-//     if (out == NULL) {
-//         fprintf(stderr, "Output file name \"%s\"is invalid. Exiting...\n", file);
-//         exit(1);
-//     }
-//
-//     for (uint i = 0; i < tripsSize; ++i) {
-//         fprintf(out, "%u ", tour[i].start.index);
-//         for (uint j = 0; j < tour[i].poiList.size(); ++j)
-//             fprintf(out, "%u ", tour[i].poiList[j].index);
-//         fprintf(out, "%u\n", tour[i].end.index);
-//     }
-//
-//     fclose(out);
-//     return;
-// }
+void write_output(uint trips_n, trip *tour, vertex *v, const char *file) {
+
+    FILE *out;
+    out = fopen(file, "w");
+
+    if (out == NULL) {
+        fprintf(stderr, "Output file \"%s\" is invalid. Exiting...\n", file);
+        exit(1);
+    }
+    for (uint i = 0; i < trips_n; ++i) {
+        for (uint j = 0; j < tour[i].list.len; ++j) {
+            fprintf(out, "%u ", v[tour[i].list.items[j]].idx);
+        }
+        fprintf(out, "\n");
+    }
+    return;
+}
