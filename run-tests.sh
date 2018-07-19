@@ -16,10 +16,11 @@ CRUN="./algorithm-c/out/main"
 
 ITER_N="1"
 H_RCL_SIZE="3"
+P_RCL_SIZE="3"
 RAN="1"
 DEBUG="0"
 
-CRUNFLAGS="$ITER_N $H_RCL_SIZE $RAN $DEBUG"
+CRUNFLAGS="$ITER_N $H_RCL_SIZE $P_RCL_SIZE $RAN $DEBUG"
 
 PRUN="python3 visualize.py"
 PMODE=1
@@ -53,7 +54,7 @@ then
 
     for f in $INSTANCESDIR/SET1_*/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$RAN" "$DEBUG"
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$RAN" "$DEBUG"
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
@@ -68,7 +69,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET2_*/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$RAN" "$DEBUG"
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$RAN" "$DEBUG"
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
@@ -83,7 +84,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET3_*/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$RAN" "$DEBUG"
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$RAN" "$DEBUG"
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
@@ -98,7 +99,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET4/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$RAN" "$DEBUG"
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$RAN" "$DEBUG"
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
@@ -113,7 +114,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET5_*/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$RAN" "$DEBUG"
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$RAN" "$DEBUG"
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE

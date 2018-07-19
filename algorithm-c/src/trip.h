@@ -10,6 +10,6 @@ typedef struct {
     double rem_len;
 } trip;
 double trip_score(trip t, vertex *v);
-bool trip_vfy(trip t, vertex *v, double **dm, uint hotels_n);
+// bool trip_vfy(trip t, vertex *v, double **dm, uint hotels_n);
 
 #endif

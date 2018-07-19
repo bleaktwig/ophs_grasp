@@ -21,7 +21,8 @@ typedef struct {
 CADTS_VECTOR(uintvec,uint);
 CADTS_VECTOR(vervec,vertex);
 
-int vertex_cmp(const void *a, const void *b);
+int vertex_cmp_desc(const void *a, const void *b);
+int vertex_cmp_asc(const void *a, const void *b);
 double d(vertex v1, vertex v2);
 double d_add(uint v1, uint v2, uint add_v, double **d_matrix);
 void create_d_matrix(double **d_matrix, uint size, vertex *v);

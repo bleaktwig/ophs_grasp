@@ -1,6 +1,6 @@
 #include "vertex.h"
 
-int vertex_cmp(const void *a, const void *b){
+int vertex_cmp_desc(const void *a, const void *b){
     const vertex *aa = (const vertex *) a;
     const vertex *bb = (const vertex *) b;
 
@@ -15,6 +15,9 @@ int vertex_cmp(const void *a, const void *b){
     if (aa->tmp_score < bb->tmp_score) return 1;
     if (aa->tmp_score > bb->tmp_score) return -1;
     return 0;
+}
+int vertex_cmp_asc(const void *a, const void *b) {
+    return vertex_cmp_desc(b, a);
 }
 double d(vertex a, vertex b) {
     return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));

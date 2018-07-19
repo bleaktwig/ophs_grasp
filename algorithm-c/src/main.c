@@ -4,9 +4,13 @@
 
 #include "vertex.h"
 #include "trip.h"
+#include "hotel_grasp.h"
+#include "poi_grasp.h"
 #include "file_io.h"
 #include "user_io.h"
-#include "hotel_grasp.h"
+
+// TODO: Check that pois visibility is correctly set as true in poi_grasp.c. It
+//       looks like there's something wrong there from the output images.
 
 void usage() { // TODO
     fprintf(stderr, "Wrong usage.\nExiting...\n");
@@ -23,11 +27,9 @@ int main(int argc, char* argv[]) {
      *      Number of iterations of the GRASP algorithm.
      *  uint h_rcl
      *      Size of the RCL used for the hotel greedy randomized construction.
-     *  uint h_ls_iter_n
-     *      Number of iterations for the hotel local search phase.
      *  uint p_rcl
      *      Size of the RCL used for the poi greedy randomized construction
-     *  uint p_ls_iter_n
+     *  uint ls_iter_n
      *      Number of iterations for the poi local search phase.
      *  uint random
      *      unsigned integer defining if a random seed should be used or not.
@@ -42,28 +44,19 @@ int main(int argc, char* argv[]) {
     const char *outfile;
     uint iters_n;
     uint h_rcl;
-    // uint h_ls_iter_n;
-    // uint p_rcl;
-    // uint p_ls_iter_n;
+    uint p_rcl;
+    // uint ls_iter_n;
     uint random;
     uint debug;
 
-    /*
-     * TODO: CALIBRATE THIS PARAMETER. imp_param DEFINES HOW IMPORTANT IS THE
-     *          SCORE OF EACH POI COMPARED TO THE DISTANCE FROM IT TO EACH HOTEL
-     *          WHEN CALCULATING A SUPLEMENTARY SCORE FOR THE HOTELS.
-     *          IF TIME IS AVAILABLE, CHECK IF IT'S POSSIBLE TO USE ANOTHER KIND
-     *          OF CURVE INSTEAD OF LINEAR FOR THIS.
-     */
-    // double d_imp_param = 1.0;
-
-    if (argc == 7) {
+    if (argc == 8) {
         infile  = argv[1];
         outfile = argv[2];
         iters_n = atoi(argv[3]);
         h_rcl = atoi(argv[4]);
-        random = atoi(argv[5]);
-        debug = atoi(argv[6]);
+        p_rcl = atoi(argv[5]);
+        random = atoi(argv[6]);
+        debug = atoi(argv[7]);
     }
     else {
         usage();
@@ -92,13 +85,6 @@ int main(int argc, char* argv[]) {
         d_matrix[i] = /*(double*) */malloc(sizeof(double) * (hotels_n + pois_n));
     create_d_matrix(d_matrix, hotels_n + pois_n, v);
     if (debug == 3) print_matrix(hotels_n + pois_n, d_matrix);
-
-/*
-// === CALCULATING HOTELS SCORE ================================================
-    if (debug) printf("=== CALCULATING HOTELS SCORE =====================\n");
-    for (uint i = 2; i < hotels_n; ++i)
-        v[i].score = calc_h_score(i, hotels_n, pois_n, d_imp_param, v, d_matrix);
-*/
 // === MAIN LOOP ===============================================================
     if (debug) printf("=== CREATING BEST TOUR AND STARTING LOOP =========\n");
     // create best_tour
@@ -116,7 +102,7 @@ int main(int argc, char* argv[]) {
 
     uint tour_grc_wack_sols = 0;
     for (uint iter = 0; iter < iters_n; ++iter) {
-        // bool scrap = false; TODO
+        bool scrap = false;
 // === TOUR CREATION ===========================================================
         trip *tour = malloc(sizeof(trip) * (trips_n));
         if (tour == NULL) {
@@ -137,22 +123,31 @@ int main(int argc, char* argv[]) {
             else if (iter%(iters_n-1) == 0 && iter != 0)
                 printf("=== RUNNING TOUR GREEDY RANDOMIZED CONSTRUCTION ==\n");
         }
+        // TODO: There might be something wrong with the last hotel added here.
         if (tour_grc(trips_n, hotels_n, pois_n, h_rcl, v, d_matrix, tour)) {
             tour_grc_wack_sols += 1;
-            // scrap = true; TODO
+            scrap = true;
         }
-// === TOUR HOTELS LOCAL SEARCH ================================================
-
 // === TOUR POIS SELECTION =====================================================
+        if (debug) {
+            if (iters_n == 1)
+                printf("=== RUNNING TRIP GREEDY RANDOMIZED CONSTRUCTION ==\n");
+            else if (iter%(iters_n-1) == 0 && iter != 0)
+                printf("=== RUNNING TRIP GREEDY RANDOMIZED CONSTRUCTION ==\n");
+        }
+        if (!scrap) trip_grc(trips_n, hotels_n, pois_n, p_rcl, v, d_matrix, tour);
 
-// === TOUR POIS LOCAL SEARCH ==================================================
+// === LOCAL SEARCH ============================================================
 
 // === BEST VS CURRENT TOUR COMPARISON =========================================
         // print_tour(trips_n, tour, v);
-
         write_output(trips_n, tour, v, outfile);
 
         // TODO: remember that copying the trip with uintvec is not trivial.
+        //       First, I need to copy the variables of the trip (tot_len and rem_len).
+        //       then, for each trip, I need to pass each uint from the trips to a
+        //       tmp_trip, and then do the same from this tmp_trip to best_trip.
+        //       This is done to conserve order.
         for (uint i = 0; i < trips_n; ++i) uintvec_free(&tour[i].list);
         free(tour);
     }
