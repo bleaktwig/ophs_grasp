@@ -24,7 +24,6 @@ void print_matrix(uint size, double **d_matrix) {
     return;
 }
 void print_tour(uint trips_n, trip *tour, vertex *v) {
-    // double total_score = 0.0; TODO
     for (uint i = 0; i < trips_n; ++i) {
         printf("-------------------------------------------\n");
         printf("Trip %u\n  score: %.2f\n  rem_len: %.2f\nRoute:\n",
@@ -37,48 +36,7 @@ void print_tour(uint trips_n, trip *tour, vertex *v) {
                     v[tour[i].list.items[j]].score);
         }
     }
+    printf("-------------------------------------------\n");
+    printf("Total score collected: %.2f\n", tour_score(trips_n, tour, v));
     return;
 }
-// void printTours(unsigned int tripsSize, struct Trip *tour) {
-//     double totalScore = 0.0;
-//     for (unsigned int i = 0; i < tripsSize; ++i) {
-//         totalScore += tour[i].score;
-//         printf("-------------------------------------------\n");
-//         printf("Trip %u\nscore: %.2f\nremLength: %.2f\n",
-//                i, tour[i].score, tour[i].remainingLength);
-//         printf("- hotel%d: (%.2f, %.2f)\n",
-//                tour[i].start.index, tour[i].start.x, tour[i].start.y);
-//         for (unsigned int j = 0; j < tour[i].poiList.size(); ++j)
-//             printf("  - poi%d: (%.2f, %.2f) - %.2f\n",
-//                    tour[i].poiList[j].index,
-//                    tour[i].poiList[j].x,
-//                    tour[i].poiList[j].y,
-//                    tour[i].poiList[j].score);
-//         printf("- hotel%d: (%.2f, %.2f)\n",
-//                tour[i].end.index, tour[i].end.x, tour[i].end.y);
-//     }
-//     printf("total score: %.2f\n", totalScore);
-//     return;
-// }
-// void printTourHotels(unsigned int tripsSize, struct Trip *tour,
-//                      double **distancesMatrix) {
-//     /*
-//      * TODO: this is the variable we are optimizing in the construction of each
-//      *       tour. When analyzing each solution this is what we need to compare
-//      *       between solutions, and when tuning the RCLSize parameter this is
-//      *       one of the best comparing factors before actually building each
-//      *       trip.
-//      */
-//     double usableDistance = 0;
-//     for (unsigned int i = 0; i < tripsSize; ++i) {
-//         printf("%d(%.2f,%.2f) - %d(%.2f,%.2f), %.2f - %.2f = %.2f\n",
-//             tour[i].start.index, tour[i].start.x, tour[i].start.y,
-//             tour[i].end.index, tour[i].end.x, tour[i].end.y,
-//             tour[i].totalLength,
-//             distancesMatrix[tour[i].start.index][tour[i].end.index],
-//             tour[i].remainingLength);
-//         usableDistance += tour[i].remainingLength;
-//     }
-//     printf("usable distance: %.2f\n", usableDistance);
-//     return;
-// }

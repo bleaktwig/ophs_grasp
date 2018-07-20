@@ -14,7 +14,7 @@ COMPILER="$COMPILER $COMPILERFLAGS"
 
 CRUN="./algorithm-c/out/main"
 
-ITER_N="1"
+ITER_N="1000"
 H_RCL_SIZE="3"
 P_RCL_SIZE="3"
 RAN="1"

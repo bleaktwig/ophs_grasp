@@ -9,9 +9,6 @@
 #include "file_io.h"
 #include "user_io.h"
 
-// TODO: Check that pois visibility is correctly set as true in poi_grasp.c. It
-//       looks like there's something wrong there from the output images.
-
 void usage() { // TODO
     fprintf(stderr, "Wrong usage.\nExiting...\n");
 
@@ -68,7 +65,7 @@ int main(int argc, char* argv[]) {
         if (debug) printf("Using the random seed %d\n", seed);
     }
 
-    if (!debug) printf("Running on \"%s\"...\n", infile);
+    if (!debug) printf("Running on \"%s\" with %u iterations...", infile, iters_n);
 // === FILE READING ============================================================
     if (debug) printf("=== READING FILE =================================\n");
     uint trips_n, hotels_n, pois_n;
@@ -77,7 +74,6 @@ int main(int argc, char* argv[]) {
     read_input(infile, &trips_n, &hotels_n, &pois_n, &trips_len, &v);
 
     if (debug == 2) print_in_vars(trips_n, trips_len, hotels_n, pois_n, v);
-
 // === DISTANCES MATRIX CREATION ===============================================
     if (debug) printf("=== CREATING DISTANCES MATRIX ====================\n");
     double **d_matrix = /*(double**) */malloc(sizeof(double*) * (hotels_n + pois_n));
@@ -98,7 +94,7 @@ int main(int argc, char* argv[]) {
         best_tour[i].tot_len = trips_len[i];
         best_tour[i].rem_len = trips_len[i];
     }
-    // double best_tour_score = 0.0;
+    double best_tour_score = 0.0;
 
     uint tour_grc_wack_sols = 0;
     for (uint iter = 0; iter < iters_n; ++iter) {
@@ -138,28 +134,45 @@ int main(int argc, char* argv[]) {
         if (!scrap) trip_grc(trips_n, hotels_n, pois_n, p_rcl, v, d_matrix, tour);
 
 // === LOCAL SEARCH ============================================================
+        if (debug) {
+            if (iters_n == 1)
+                printf("=== RUNNING LOCAL SEARCH =========================\n");
+            else if (iter%(iters_n-1) == 0 && iter != 0)
+                printf("=== RUNNING LOCAL SEARCH =========================\n");
+        }
+        // if (!scrap) local_search(trips_n, hotels_n, pois_n, ls_iter_n, v, d_matrix, tour);
 
 // === BEST VS CURRENT TOUR COMPARISON =========================================
-        // print_tour(trips_n, tour, v);
-        write_output(trips_n, tour, v, outfile);
-
-        // TODO: remember that copying the trip with uintvec is not trivial.
-        //       First, I need to copy the variables of the trip (tot_len and rem_len).
-        //       then, for each trip, I need to pass each uint from the trips to a
-        //       tmp_trip, and then do the same from this tmp_trip to best_trip.
-        //       This is done to conserve order.
+        // double tour_score_precalc = tour_score(trips_n, tour, v);
+        // if (best_tour_score < tour_score_precalc) {
+        //     best_tour_score = tour_score_precalc;
+        //     uintvec tmp_trip;
+        //     uintvec_init(&tmp_trip, 2);
+        //     for (uint i = 0; i < trips_n; ++i) {
+        //         best_tour[i].rem_len = tour[i].rem_len;
+        //         // empty best_tour[i]
+        //         for (uint j = 0; best_tour[i].list.len != 0; ++j)
+        //             uintvec_endpop(&best_tour[i].list);
+        //         // fill tmp_tour to keep vertex order
+        //         for (uint j = 0; tour[i].list.len != 0; ++j)
+        //             uintvec_endadd(&tmp_trip, uintvec_endpop(&tour[i].list));
+        //         // dump tmp_tour onto best_tour[i]
+        //         for (uint j = 0; tmp_trip.len != 0; ++j)
+        //             uintvec_endadd(&best_tour[i].list, uintvec_endpop(&tmp_trip));
+        //     }
+        //     uintvec_free(&tmp_trip);
+        //     if (debug) printf("new best tour score: %.2f\n", best_tour_score);
+        // }
         for (uint i = 0; i < trips_n; ++i) uintvec_free(&tour[i].list);
         free(tour);
     }
 
     if (tour_grc_wack_sols > 0)
-        printf("    %u/%u solutions were scrapped by the tour grc.\n",
+        printf("\n    %u/%u solutions were scrapped by the tour grc.\n",
                 tour_grc_wack_sols, iters_n);
+    else if (!debug) printf(" OK!\n");
 // === OUTPUT FILE WRITING =====================================================
-    // if (!debug) printf("OK!\n");
-    // if (!debug) printf("Writing to \"%s\"...    ", outfile);
-    //
-    // if (!debug) printf("OK!\n"); TODO: uncomment
+    write_output(trips_n, best_tour, v, outfile);
 // === MEMORY RELEASING ========================================================
     if (debug) printf("=== RELEASING MEMORY =============================\n");
     free(trips_len);
@@ -168,6 +181,6 @@ int main(int argc, char* argv[]) {
     free(d_matrix);
     for (uint i = 0; i < trips_n; ++i) uintvec_free(&best_tour[i].list);
     free(best_tour);
-
+    // if (!debug) printf(" OK!\n");
     return 0;
 }

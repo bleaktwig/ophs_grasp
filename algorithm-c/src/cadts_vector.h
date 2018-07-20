@@ -76,11 +76,23 @@ static STRU NAME##_endpop(NAME *vect){\
 \
 static STRU NAME##_pop(NAME *vect, int p){\
     STRU ret = vect->items[p];\
-    for(int i=p; p<vect->len-1; p++){\
+    vect->len -= 1;\
+    for(int i=p; i<vect->len; i++){\
         vect->items[i] = vect->items[i+1];\
     }\
-    vect->len -= 1;\
     return ret;\
+}\
+\
+static void NAME##_add(NAME *vect, int p, STRU stru){\
+    if(vect->len==vect->size){\
+        vect->size *= 2;\
+        vect->items = (STRU *) realloc(vect->items,sizeof(STRU)*vect->size);\
+    }\
+    for(int i=vect->len-1; p<=i; i--){\
+        vect->items[i+1] = vect->items[i];\
+    }\
+    vect->len += 1;\
+    vect->items[p] = stru;\
 }\
 \
 

@@ -1,10 +1,6 @@
 #ifndef GRASP_POI_H
 #define GRASP_POI_H
 
-// #include <algorithm>
-// #include <stdlib.h>
-// #include <stdio.h>
-
 #include "vertex.h"
 #include "trip.h"
 

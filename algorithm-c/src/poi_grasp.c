@@ -37,5 +37,6 @@ void trip_grc(uint trips_n, uint hotels_n, uint pois_n, uint rcl,
             tour[i].rem_len = new_rem_len;
         }
     }
+    vervec_free(&cndt_p);
     return;
 }

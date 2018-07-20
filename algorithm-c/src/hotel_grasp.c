@@ -26,11 +26,15 @@ bool tour_grc(uint trips_n, uint hotels_n, uint pois_n, uint rcl,
         vervec_pop(&cndt_h, pos);
 
         tour[i].rem_len = tour[i].tot_len - d_matrix[tour[i].list.items[0]][tour[i].list.items[1]];
-        if (tour[i].rem_len <= 0.0) return true;
+        if (tour[i].rem_len <= 0.0) {
+            vervec_free(&cndt_h);
+            return true;
+        }
     }
     uint aux_vert = tour[trips_n-1].list.items[0];
     tour[trips_n-1].list.items[0] = tour[trips_n-1].list.items[1];
     tour[trips_n-1].list.items[1] = aux_vert;
+    vervec_free(&cndt_h);
     if (tour[trips_n-1].rem_len <= 0.0) return true;
     return false;
 }

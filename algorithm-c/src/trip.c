@@ -7,6 +7,12 @@ double trip_score(trip t, vertex *v) {
         score += v[t.list.items[i]].score;
     return score;
 }
+double tour_score(uint trips_n, trip *t, vertex *v) {
+    double score = 0.0;
+    for (uint i = 0; i < trips_n; ++i)
+        score += trip_score(t[i], v);
+    return score;
+}
 // bool trip_vfy(trip t, vertex *v, double **dm, uint hotels_n) {
 //     if (t.list.items[0] >= hotels_n)
 //         return true;

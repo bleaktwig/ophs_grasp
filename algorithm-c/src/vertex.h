@@ -3,7 +3,6 @@
 
 #include <stdbool.h>
 #include <math.h>
-// #include <stdio.h>
 
 #include "cadts_vector.h"
 

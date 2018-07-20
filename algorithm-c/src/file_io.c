@@ -65,10 +65,10 @@ void write_output(uint trips_n, trip *tour, vertex *v, const char *file) {
         exit(1);
     }
     for (uint i = 0; i < trips_n; ++i) {
-        for (uint j = 0; j < tour[i].list.len; ++j) {
+        for (uint j = 0; j < tour[i].list.len; ++j)
             fprintf(out, "%u ", v[tour[i].list.items[j]].idx);
-        }
         fprintf(out, "\n");
     }
+    fclose(out);
     return;
 }

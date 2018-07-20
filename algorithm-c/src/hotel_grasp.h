@@ -1,10 +1,8 @@
 #ifndef GRASP_HOTEL_H
 #define GRASP_HOTEL_H
 
-// #include <algorithm>
 #include <float.h>
 #include <stdlib.h>
-#include <stdio.h> // DEBUG
 
 #include "vertex.h"
 #include "trip.h"
