@@ -11,7 +11,7 @@ A Greedy Randomized Adaptive Search Procedure (GRASP) is a metaheuristic algorit
 * **TODO**
 
 ### Instances
-* **TODO**: point to where they are and where their format is explained.
+The instances are inside the `instances/` directory, along with a format description in the same directory. They were downloaded from [KU Leuven](https://www.mech.kuleuven.be/en/cib/op#section-14).
 
 ### Running:
 The C code is inside the `algorithm/src/` directory and its compiled output is stored in the `algorithm/bin/`. The parameters given to it are:
