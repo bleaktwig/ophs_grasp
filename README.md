@@ -14,7 +14,7 @@ A Greedy Randomized Adaptive Search Procedure (GRASP) is a metaheuristic algorit
 * **TODO**: point to where they are and where their format is explained.
 
 ### Running:
-The C code is inside the `algorithm-c/src/` directory and its compiled output is stored in the `algorithm-c/out/`. The parameters given to it are:
+The C code is inside the `algorithm/src/` directory and its compiled output is stored in the `algorithm/bin/`. The parameters given to it are:
 * **TODO**: Usage
 
 An output file for each instance is already in the `out/` directory, and its format is as follows:
@@ -24,5 +24,5 @@ There's a python script inside the main directory named `visualize.py` which can
 * **TODO**: Usage
 
 To run the algorithm and the visualization script in a fast manner for all the instances or a subset of them, there is a shell script in the main directory named `run-tests.sh`. It's usage is simple:
-* `$1`: an integer from **0** to **5** that tells the script what set of instances to run, where **1** to **5** correlate directly to a set of instances (SET1 through SET5), and **0** tells the script to simply run on all the given instances.
-* `$2`: an integer that can be either **0** or **1**, where **0** tells the script to only run the algorithm while **1** points it to also running the visualization script.
+* `$1`: an integer from `0` to `5` that tells the script what set of instances to run, where `1` to `5` correlate directly to a set of instances (SET1 through SET5), and `0` tells the script to simply run on all the given instances.
+* `$2`: an integer that can be either `0` or `1`, where `0` tells the script to only run the algorithm while `1` points it to also running the visualization script.
