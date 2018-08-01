@@ -2,40 +2,16 @@
 #include <stdlib.h> // srand and rand
 #include <time.h>   // time()
 
+#include "file_io.h"
+#include "user_io.h"
+#include "error_io.h"
+
 #include "vertex.h"
 #include "trip.h"
 #include "hotel_grasp.h"
 #include "poi_grasp.h"
 #include "local_search.h"
-#include "file_io.h"
-#include "user_io.h"
 
-void usage() {
-    fprintf(stderr, "\n");
-    fprintf(stderr, "usage: ophs_grasp infile outfile iter_n h_rcl p_rcl ");
-    fprintf(stderr, "ls_iter_n random debug\n");
-    fprintf(stderr, "  - const char*  infile:    ");
-    fprintf(stderr, "    the input file\n");
-    fprintf(stderr, "  - const char*  outfile:   ");
-    fprintf(stderr, "    the output file\n");
-    fprintf(stderr, "  - unsigned int iter_n:    ");
-    fprintf(stderr, "    number of iterations the program should run\n");
-    fprintf(stderr, "  - unsigned int h_rcl:     ");
-    fprintf(stderr, "    rcl size for the hotel construction algorithm\n");
-    fprintf(stderr, "  - unsigned int p_rcl:     ");
-    fprintf(stderr, "    rcl size for the poi construction algorithm\n");
-    fprintf(stderr, "  - unsigned int ls_iter_n: ");
-    fprintf(stderr, "    number of iterations for the local search ");
-    fprintf(stderr, "algorithm\n");
-    fprintf(stderr, "  - unsigned int random:    ");
-    fprintf(stderr, "    a flag telling the program to use a random ");
-    fprintf(stderr, "seed\n");
-    fprintf(stderr, "  - unsigned int debug:     ");
-    fprintf(stderr, "    an integer defining how much output the program ");
-    fprintf(stderr, "should give\n");
-    fprintf(stderr, "\n");
-    return;
-}
 int main(int argc, char* argv[]) {
     const char *infile;
     const char *outfile;
@@ -46,6 +22,7 @@ int main(int argc, char* argv[]) {
     uint random;
     uint debug;
 
+// === PARAMETER HANDLING ======================================================
     if (argc == 9) {
         // TODO: datatype checking
         infile  = argv[1];
@@ -57,10 +34,7 @@ int main(int argc, char* argv[]) {
         random = atoi(argv[7]);
         debug = atoi(argv[8]);
     }
-    else {
-        usage();
-        return 1;
-    }
+    else usage();
     if (random) {
         uint seed = time(NULL);
         srand(seed);
@@ -75,7 +49,7 @@ int main(int argc, char* argv[]) {
     vertex *v;
     read_input(infile, &trips_n, &hotels_n, &pois_n, &trips_len, &v);
 
-    if (debug == 2) print_in_vars(trips_n, trips_len, hotels_n, pois_n, v);
+    if (debug >= 2) print_in_vars(trips_n, trips_len, hotels_n, pois_n, v);
 // === DISTANCES MATRIX CREATION ===============================================
     if (debug) printf("=== CREATING DISTANCES MATRIX ====================\n");
     double **d_matrix = (double**) malloc(sizeof(double*) * (hotels_n + pois_n));
@@ -85,12 +59,8 @@ int main(int argc, char* argv[]) {
     if (debug == 3) print_matrix(hotels_n + pois_n, d_matrix);
 // === MAIN LOOP ===============================================================
     if (debug) printf("=== CREATING BEST TOUR AND STARTING LOOP =========\n");
-    // create best_tour
     trip *best_tour = (trip*) malloc(sizeof(trip) * (trips_n));
-    if (best_tour == NULL) {
-        fprintf(stderr, "Not enough memory allocated for the best tour. Exiting...\n");
-        exit(1);
-    }
+    if (best_tour == NULL) error_handler(0, "main");
     for (uint i = 0; i < trips_n; ++i) {
         uintvec_init(&best_tour[i].route, 2);
         best_tour[i].tot_len = trips_len[i];
@@ -103,11 +73,7 @@ int main(int argc, char* argv[]) {
         bool scrap = false;
 // === TOUR CREATION ===========================================================
         trip *tour = (trip*) malloc(sizeof(trip) * (trips_n));
-        if (tour == NULL) {
-            fprintf(stderr, "Not enough memory allocated for a tour in iter");
-            fprintf(stderr, "%d. Exiting...\n", iter);
-            exit(1);
-        }
+        if (tour == NULL) error_handler(0, "main");
         for (uint i = 0; i < trips_n; ++i) {
             uintvec_init(&tour[i].route, 2);
             tour[i].tot_len = trips_len[i];
@@ -124,6 +90,13 @@ int main(int argc, char* argv[]) {
 // === LOCAL SEARCH ============================================================
         // TODO: this is where we are now
         // if (!scrap) local_search(trips_n, hotels_n, pois_n, ls_iter_n, v, d_matrix, tour);
+        // poiadd_v(&tour[0], v, 30, hotels_n, pois_n, d_matrix);
+        // poiadd_v(&tour[0], v, 23, hotels_n, pois_n, d_matrix);
+        // poiadd_v(&tour[0], v, 83, hotels_n, pois_n, d_matrix);
+        // poiadd_v(&tour[0], v, 45, hotels_n, pois_n, d_matrix);
+
+        // add_v(&tour[0], tour[0].route.len-2, v, 83, hotels_n, pois_n, d_matrix);
+
         // print_tour(trips_n, tour, v);
         // for (uint i = 0; i < trips_n; ++i)
             // printf("%u: %d\n", i, trip_vfy(tour[i], v, d_matrix, hotels_n));
@@ -150,9 +123,10 @@ int main(int argc, char* argv[]) {
         free(tour);
     }
 
-    if (tour_grc_wack_sols > 0)
+    if (tour_grc_wack_sols > 0) {
         printf("    %u/%u solutions were scrapped by the tour grc.\n",
                 tour_grc_wack_sols, iters_n);
+    }
     printf("    The best solution found has a score of: %.2f\n",
             tour_score(trips_n, best_tour, v));
 // === OUTPUT FILE WRITING =====================================================

@@ -22,7 +22,7 @@ void local_search(uint trips_n, uint hotels_n, uint pois_n, uint iter_n,
     cpoivec_init(&cndt_p, 1);
     for (uint i = hotels_n; i < hotels_n + pois_n; ++i) {
         if (v[i].vis == false) {
-            printf("%u ", v[i].idx);
+            // printf("%u ", v[i].idx);
             cndt_poi tmp_poi;
             tmp_poi.v = v[i];
             tmp_poi.b_score = 0.0;
@@ -32,10 +32,10 @@ void local_search(uint trips_n, uint hotels_n, uint pois_n, uint iter_n,
             cpoivec_endadd(&cndt_p, tmp_poi);
         }
     }
-    printf("\n");
-    for (uint i = 0; i < cndt_p.len; ++i)
-        printf("%u ", cndt_p.items[i].v.idx);
-    printf("\n");
+    // printf("\n");
+    // for (uint i = 0; i < cndt_p.len; ++i)
+    //     printf("%u ", cndt_p.items[i].v.idx);
+    // printf("\n");
 
     for (uint iter = 0; iter < iter_n; ++iter) {
 // === INSERT ==================================================================
@@ -65,21 +65,21 @@ void local_search(uint trips_n, uint hotels_n, uint pois_n, uint iter_n,
                 }
             }
         }
-        for (uint i = 0; i < cndt_p.len; ++i)
-            printf("%u ", cndt_p.items[i].v.idx);
-        printf("\n");
+        // for (uint i = 0; i < cndt_p.len; ++i)
+        //     printf("%u ", cndt_p.items[i].v.idx);
+        // printf("\n");
         qsort(cndt_p.items, cndt_p.len, sizeof(cndt_poi), cndt_poi_cmp);
-        for (uint i = 0; i < cndt_p.len; ++i)
-            printf("%u ", cndt_p.items[i].v.idx);
-        printf("\n\n");
+        // for (uint i = 0; i < cndt_p.len; ++i)
+        //     printf("%u ", cndt_p.items[i].v.idx);
+        // printf("\n\n");
 
-        print_tour(trips_n, tour, v);
-        for (uint p = 0; p < cndt_p.len; ++p) {
-            printf("poi %u (%.2f,%.2f):\n - score: %.2f\n - distance: %.2f\n - position: %u, %u\n",
-                   cndt_p.items[p].v.idx, cndt_p.items[p].v.x, cndt_p.items[p].v.y,
-                   cndt_p.items[p].b_score, cndt_p.items[p].b_dis,
-                   cndt_p.items[p].b_trip, cndt_p.items[p].b_pos);
-        }
+        // print_tour(trips_n, tour, v);
+        // for (uint p = 0; p < cndt_p.len; ++p) {
+        //     printf("poi %u (%.2f,%.2f):\n - score: %.2f\n - distance: %.2f\n - position: %u, %u\n",
+        //            cndt_p.items[p].v.idx, cndt_p.items[p].v.x, cndt_p.items[p].v.y,
+        //            cndt_p.items[p].b_score, cndt_p.items[p].b_dis,
+        //            cndt_p.items[p].b_trip, cndt_p.items[p].b_pos);
+        // }
         // print_tour(trips_n, tour, v);
         while (true) {
             uint top = cndt_p.len-1;
@@ -93,10 +93,10 @@ void local_search(uint trips_n, uint hotels_n, uint pois_n, uint iter_n,
                         cpoivec_endpop(&cndt_p).v.idx); // DEBUG!!
             break;
         }
-        print_tour(trips_n, tour, v);
-        for (uint i = 0; i < cndt_p.len; ++i)
-            printf("%u ", cndt_p.items[i].v.idx);
-        printf("\n\n");
+        // print_tour(trips_n, tour, v);
+        // for (uint i = 0; i < cndt_p.len; ++i)
+        //     printf("%u ", cndt_p.items[i].v.idx);
+        // printf("\n\n");
 
         // print_tour(trips_n, tour, v);
         // for (uint p = 0; p < cndt_p.len; ++p) {

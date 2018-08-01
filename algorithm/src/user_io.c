@@ -14,7 +14,10 @@ void print_in_vars(uint trips_n, double *trips_len,
     return;
 }
 void print_matrix(uint size, double **d_matrix) {
-    // may god have mercy on any terminal printing this for a big enough matrix
+    /*
+     * May whatever divinity you believe in have mercy on any terminal printing
+     * this for a big enough matrix.
+     */
     for (uint i = 0; i < size; ++i) {
         for (uint j = 0; j < size; ++j) {
             if (d_matrix[i][j] < 10.0) printf(" %.0f ", d_matrix[i][j]);

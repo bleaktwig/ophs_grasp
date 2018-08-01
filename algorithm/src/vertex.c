@@ -9,8 +9,9 @@ int vertex_cmp_desc(const void *a, const void *b){
             return 0;
         return -1;
     }
-    if (isinf(bb->tmp_score) || isnan(bb->tmp_score))
+    if (isinf(bb->tmp_score) || isnan(bb->tmp_score)) {
         return 1;
+    }
 
     if (aa->tmp_score < bb->tmp_score) return 1;
     if (aa->tmp_score > bb->tmp_score) return -1;
@@ -23,10 +24,6 @@ double d(vertex a, vertex b) {
     return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
 }
 double d_add(uint v1, uint v2, uint add_v, double **d_matrix) {
-    // printf("  - adding v%u between v%u and v%u\n", add_v, v1, v2);
-    // printf("    - between v%u and v%u there are %.2f\n", v1, v2, d_matrix[v1][v2]);
-    // printf("    - between v%u and v%u there are %.2f\n", v1, add_v, d_matrix[v1][add_v]);
-    // printf("    - between v%u and v%u there are %.2f\n", add_v, v2, d_matrix[add_v][v2]);
     return (d_matrix[v1][add_v] + d_matrix[add_v][v2] - d_matrix[v1][v2]);
 }
 void create_d_matrix(double **d_matrix, uint size, vertex *v) {

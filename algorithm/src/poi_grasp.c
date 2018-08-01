@@ -21,15 +21,7 @@ void trip_grc(uint trips_n, uint hotels_n, uint pois_n, uint rcl,
             if (cndt_p.len == 0) break;
 
             uint choice = (rcl > 0) ? cndt_p.len-1 - (rand()%rcl) : 0;
-
-            double new_rem_len = tour[i].rem_len -
-                d_add(tour[i].route.items[tour[i].route.len-2],
-                      tour[i].route.items[tour[i].route.len-1],
-                      cndt_p.items[choice].idx, d_matrix);
-
-            if (new_rem_len < 0.0) break;
-
-            poiadd_v(&tour[i], v, cndt_p.items[choice].idx, d_matrix);
+            if (poiadd_v(&tour[i], v, cndt_p.items[choice].idx, hotels_n, pois_n, d_matrix)) break;
             vervec_pop(&cndt_p, choice);
         }
         if (cndt_p.len == 0) break;

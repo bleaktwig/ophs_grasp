@@ -1,11 +1,11 @@
 #ifndef LOCAL_SEARCH_H
 #define LOCAL_SEARCH_H
 
-#include <stdio.h>
+#include <stdio.h> // DEBUG
+#include "user_io.h" // DEBUG
 
 #include "vertex.h"
 #include "trip.h"
-#include "user_io.h"
 
 typedef struct {
     vertex v;

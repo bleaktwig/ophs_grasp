@@ -1,8 +1,7 @@
 #ifndef GRASP_FILEIO_H
 #define GRASP_FILEIO_H
 
-#include <stdio.h>
-
+#include "error_io.h"
 #include "vertex.h"
 #include "trip.h"
 
