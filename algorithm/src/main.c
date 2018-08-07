@@ -12,6 +12,10 @@
 #include "poi_grasp.h"
 #include "local_search.h"
 
+#define KNRM "\x1B[0m"
+#define KRED "\x1B[31m"
+#define KGRN "\x1B[32m"
+
 int main(int argc, char* argv[]) {
     const char *infile;
     const char *outfile;
@@ -70,6 +74,7 @@ int main(int argc, char* argv[]) {
 
     uint tour_grc_wack_sols = 0;
     for (uint iter = 0; iter < iters_n; ++iter) {
+        // printf("%u\n", iter);
         bool scrap = false;
 // === TOUR CREATION ===========================================================
         trip *tour = (trip*) malloc(sizeof(trip) * (trips_n));
@@ -89,18 +94,7 @@ int main(int argc, char* argv[]) {
         if (!scrap) trip_grc(trips_n, hotels_n, pois_n, p_rcl, v, d_matrix, tour);
 // === LOCAL SEARCH ============================================================
         // TODO: this is where we are now
-        // if (!scrap) local_search(trips_n, hotels_n, pois_n, ls_iter_n, v, d_matrix, tour);
-        // poiadd_v(&tour[0], v, 30, hotels_n, pois_n, d_matrix);
-        // poiadd_v(&tour[0], v, 23, hotels_n, pois_n, d_matrix);
-        // poiadd_v(&tour[0], v, 83, hotels_n, pois_n, d_matrix);
-        // poiadd_v(&tour[0], v, 45, hotels_n, pois_n, d_matrix);
-
-        // add_v(&tour[0], tour[0].route.len-2, v, 83, hotels_n, pois_n, d_matrix);
-
-        // print_tour(trips_n, tour, v);
-        // for (uint i = 0; i < trips_n; ++i)
-            // printf("%u: %d\n", i, trip_vfy(tour[i], v, d_matrix, hotels_n));
-        // print_in_vars(trips_n, trips_len, hotels_n, pois_n, v);
+        if (!scrap) local_search(trips_n, hotels_n, pois_n, ls_iter_n, v, d_matrix, tour, iter);
 // === BEST VS CURRENT TOUR COMPARISON =========================================
         double tour_score_precalc = tour_score(trips_n, tour, v);
         if (!scrap && best_tour_score < tour_score_precalc) {
@@ -124,11 +118,14 @@ int main(int argc, char* argv[]) {
     }
 
     if (tour_grc_wack_sols > 0) {
-        printf("    %u/%u solutions were scrapped by the tour grc.\n",
-                tour_grc_wack_sols, iters_n);
+        printf("%s    %u/%u solutions were scrapped by the tour grc.\n",
+                KRED, tour_grc_wack_sols, iters_n);
     }
-    printf("    The best solution found has a score of: %.2f\n",
-            tour_score(trips_n, best_tour, v));
+    if (tour_grc_wack_sols != iters_n) {
+        printf("%s    The best solution found has a score of: %.2f\n",
+                KGRN, tour_score(trips_n, best_tour, v));
+    }
+    printf("%s", KNRM);
 // === OUTPUT FILE WRITING =====================================================
     write_output(trips_n, best_tour, v, outfile);
 // === MEMORY RELEASING ========================================================

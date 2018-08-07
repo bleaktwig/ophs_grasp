@@ -58,7 +58,7 @@ bool add_v(trip *t, uint tp, vertex *v, uint vp, uint hn, uint pn, double **dm) 
     // add a given poi to a given position of a given trip.
     if (vp < hn || vp >= hn + pn) error_handler(32, "");
     if (tp <= 0 || tp >= t->route.len-1) error_handler(33, "");
-    if (v[vp].vis) return 1;
+    if (v[vp].vis) error_handler(34, "");
     double new_rem_len = t->rem_len;
     new_rem_len -= d_add(t->route.items[tp-1], t->route.items[tp], vp, dm);
     if (new_rem_len <= 0.0) return 1;

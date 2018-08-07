@@ -17,7 +17,7 @@ CRUN="./algorithm/bin/main"
 ITER_N="1000"
 H_RCL_SIZE="3"
 P_RCL_SIZE="3"
-LS_ITER_N="1"
+LS_ITER_N="10"
 RAN="0"
 DEBUG="0"
 

@@ -50,9 +50,11 @@ void error_handler(int error_id, const char *info) {
         fprintf(stderr, "Tried to add a hotel via add_v(). Exiting...\n");
     else if (error_id == 33)
         fprintf(stderr, "Tried to add to an invalid position via add_v(). Exiting...\n");
+    else if (error_id == 34)
+        fprintf(stderr, "Tried to add a poi that was already visited. Exiting...\n");
     // invalid error code
     else
         fprintf(stderr, "Invalid error code given to error_handler(). Exiting...\n");
-    exit(1);
+    // exit(1);
     return;
 }
