@@ -95,12 +95,6 @@ int main(int argc, char* argv[]) {
 // === LOCAL SEARCH ============================================================
         // TODO: this is where we are now
         if (!scrap) local_search(trips_n, hotels_n, pois_n, ls_iter_n, v, d_matrix, tour, iter);
-        // rem_v(&tour[0], 1, v, hotels_n, pois_n, d_matrix);
-        // print_tour(trips_n, tour, v);
-        // printf("%.2f\n", tour[0].tot_len - calc_dist(tour[0], d_matrix));
-        // printf("%d\n", trip_vfy(tour[0], v, d_matrix, hotels_n));
-        // print_tour(trips_n, tour, v);
-        // uint rem_v(trip *t, uint tp, vertex *v, uint hn, uint pn, double **dm)
 // === BEST VS CURRENT TOUR COMPARISON =========================================
         double tour_score_precalc = tour_score(trips_n, tour, v);
         if (!scrap && best_tour_score < tour_score_precalc) {

@@ -42,7 +42,7 @@ void error_handler(int error_id, const char *info) {
     }
     else if (error_id == 6)
         fprintf(stderr, "Output file \"%s\" is invalid.", info);
-    // trip handling [30 - 39]
+    // trip handling [30 - 49]
     else if (error_id == 30)
         fprintf(stderr, "Tried to add a poi via endadd_v().");
     else if (error_id == 31)
@@ -56,13 +56,21 @@ void error_handler(int error_id, const char *info) {
     else if (error_id == 35)
         fprintf(stderr, "Tried to add a poi that was already visited via add_v().");
     else if (error_id == 36)
-        fprintf(stderr, "Tried to remove an hotel with rem_v().");
+        fprintf(stderr, "Tried to remove an hotel.");
     else if (error_id == 37)
-        fprintf(stderr, "Tried to remove a vertex that doesn't exist via rem_v().");
+        fprintf(stderr, "Tried to remove a vertex that doesn't exist.");
     else if (error_id == 38)
-        fprintf(stderr, "Tried to remove a poi from an invalid position via rem_v().");
+        fprintf(stderr, "Tried to remove a poi from an invalid position.");
     else if (error_id == 39)
         fprintf(stderr, "Tried to remove an unvisited poi from a trip.");
+    else if (error_id == 40)
+        fprintf(stderr, "Tried to exchange a poi from an invalid position.");
+    else if (error_id == 41)
+        fprintf(stderr, "Tried to exchange an hotel.");
+    else if (error_id == 42)
+        fprintf(stderr, "Tried to exchange an inexistent poi.");
+    else if (error_id == 43)
+        fprintf(stderr, "Tried to exchange an unvisited poi.");
     // invalid error code
     else
         fprintf(stderr, "Invalid error code given to error_handler().");
