@@ -28,33 +28,46 @@ void usage() {
     return;
 }
 void error_handler(int error_id, const char *info) {
+    fprintf(stderr, "%s", KRED);
     // not enough memory [00]
     if      (error_id == 0)
-        fprintf(stderr, "Not enough memory allocated during %s. Exiting...\n", info);
+        fprintf(stderr, "Not enough memory allocated during %s.", info);
     // file io [01 - 09]
     else if (error_id == 1)
-        fprintf(stderr, "input file name \"%s\" is invalid. Exiting...\n", info);
+        fprintf(stderr, "input file name \"%s\" is invalid.", info);
     else if (error_id == 2) {
         fprintf(stderr, "The given total tour length doesn't correlate with ");
         fprintf(stderr, "the length of each individual trip. The instance ");
-        fprintf(stderr, "given is invalid. Exiting...\n");
+        fprintf(stderr, "given is invalid.");
     }
     else if (error_id == 6)
-        fprintf(stderr, "Output file \"%s\" is invalid. Exiting...\n", info);
+        fprintf(stderr, "Output file \"%s\" is invalid.", info);
     // trip handling [30 - 39]
     else if (error_id == 30)
-        fprintf(stderr, "Tried to add a poi via endadd_v(). Exiting...\n");
+        fprintf(stderr, "Tried to add a poi via endadd_v().");
     else if (error_id == 31)
-        fprintf(stderr, "Tried to add to an invalid position via poiadd_v(). Exiting...\n");
+        fprintf(stderr, "Tried to add to an invalid position via poiadd_v().");
     else if (error_id == 32)
-        fprintf(stderr, "Tried to add a hotel via add_v(). Exiting...\n");
+        fprintf(stderr, "Tried to add a hotel via add_v().");
     else if (error_id == 33)
-        fprintf(stderr, "Tried to add to an invalid position via add_v(). Exiting...\n");
+        fprintf(stderr, "Tried to add a vertex that doesn't exist via add_v().");
     else if (error_id == 34)
-        fprintf(stderr, "Tried to add a poi that was already visited. Exiting...\n");
+        fprintf(stderr, "Tried to add to an invalid position via add_v().");
+    else if (error_id == 35)
+        fprintf(stderr, "Tried to add a poi that was already visited via add_v().");
+    else if (error_id == 36)
+        fprintf(stderr, "Tried to remove an hotel with rem_v().");
+    else if (error_id == 37)
+        fprintf(stderr, "Tried to remove a vertex that doesn't exist via rem_v().");
+    else if (error_id == 38)
+        fprintf(stderr, "Tried to remove a poi from an invalid position via rem_v().");
+    else if (error_id == 39)
+        fprintf(stderr, "Tried to remove an unvisited poi from a trip.");
     // invalid error code
     else
-        fprintf(stderr, "Invalid error code given to error_handler(). Exiting...\n");
-    // exit(1);
+        fprintf(stderr, "Invalid error code given to error_handler().");
+    fprintf(stderr, " Exiting...\n");
+    fprintf(stderr, "%s", KNRM);
+    exit(1);
     return;
 }
