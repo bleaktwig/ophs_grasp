@@ -1,20 +1,21 @@
 #include "trip.h"
 
 double trip_score(trip t, vertex *v) {
-    // calculate and return the score associated to a given trip.
+    // calculates and returns the score associated to a given trip.
     double score = 0.0;
     for (uint i = 0; i < t.route.len; ++i)
         score += v[t.route.items[i]].score;
     return score;
 }
 double tour_score(uint trips_n, trip *t, vertex *v) {
-    // calculate and return the score associated to all the trips within a tour.
+    // calculates and returns the score associated to all the trips within a tour.
     double score = 0.0;
     for (uint i = 0; i < trips_n; ++i)
         score += trip_score(t[i], v);
     return score;
 }
 double calc_dist(trip t, double **dm) {
+    // calculates and returns the distance of a given trip.
     double distance = 0;
     for (uint i = 0; i < t.route.len-1; ++i) {
         distance += dm[t.route.items[i]][t.route.items[i+1]];
@@ -22,7 +23,7 @@ double calc_dist(trip t, double **dm) {
     return distance;
 }
 bool trip_vfy(trip t, vertex *v, double **dm, uint hotels_n) {
-    // verify the validity of a given trip.
+    // verifies the validity of a given trip.
     if (t.route.items[0] >= hotels_n) return 1;
     if (t.route.items[t.route.len-1] >= hotels_n) return 1;
     double d_assert = 0.0;
@@ -31,7 +32,7 @@ bool trip_vfy(trip t, vertex *v, double **dm, uint hotels_n) {
     return (d_assert > t.tot_len);
 }
 bool endadd_v(trip *t, vertex *v, uint vp, uint hn, double **dm, bool override) {
-    // add a given hotel to the end of a given trip.
+    // adds a given hotel to the end of a given trip.
     if (vp >= hn) error_handler(30, "");
     if (v[vp].vis && !override) return 1;
     double new_rem_len = t->rem_len;
@@ -46,7 +47,7 @@ bool endadd_v(trip *t, vertex *v, uint vp, uint hn, double **dm, bool override) 
 }
 // TODO: the naming convention for these two next functions is non-explanatory
 bool poiadd_v(trip *t, vertex *v, uint vp, uint hn, uint pn, double **dm) {
-    // add a given poi to the second-to-last position of a given trip.
+    // adds a given poi to the second-to-last position of a given trip.
     if (vp < hn || vp >= hn + pn) error_handler(31, "");
     if (v[vp].vis) return 1;
     double new_rem_len = t->rem_len;
@@ -62,7 +63,7 @@ bool poiadd_v(trip *t, vertex *v, uint vp, uint hn, uint pn, double **dm) {
     return 0;
 }
 bool add_v(trip *t, uint tp, vertex *v, uint vp, uint hn, uint pn, double **dm) {
-    // add a given poi to a given position of a given trip.
+    // adds a given poi to a given position of a given trip.
     if (vp < hn) error_handler(32, "");
     if (vp >= hn + pn) error_handler(33, "");
     if (tp <= 0 || tp >= t->route.len) error_handler(34, "");
@@ -99,7 +100,7 @@ uint rem_v(trip *t, uint tp, vertex *v, uint hn, uint pn, double **dm) {
 }
 bool trip_exchange_v(trip *t, uint tp1, uint tp2, vertex *v, uint hn, uint pn, double **dm) {
     // exchanges two pois inside one trip.
-    if (tp2 <= tp1) { // tp1 must be lower than tp2
+    if (tp2 <= tp1) {
         uint auxtp = tp2;
         tp2 = tp1;
         tp1 = auxtp;
@@ -122,7 +123,6 @@ bool trip_exchange_v(trip *t, uint tp1, uint tp2, vertex *v, uint hn, uint pn, d
                 // pass
             }
             else {
-                // VERTEX AUX_V2 WAS NOT ADDED BUT AUX_V1 WAS ADDED
                 rem_v(t, tp1, v, hn, pn, dm);
                 add_v(t, tp1, v, aux_v1, hn, pn, dm);
                 add_v(t, tp2, v, aux_v2, hn, pn, dm);
@@ -130,7 +130,6 @@ bool trip_exchange_v(trip *t, uint tp1, uint tp2, vertex *v, uint hn, uint pn, d
             }
         }
         else {
-            // VERTEX AUX_V1 WAS NOT ADDED
             add_v(t, tp1, v, aux_v1, hn, pn, dm);
             add_v(t, tp2, v, aux_v2, hn, pn, dm);
             return 1;

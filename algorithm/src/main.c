@@ -12,10 +12,6 @@
 #include "poi_grasp.h"
 #include "local_search.h"
 
-#define KNRM "\x1B[0m"
-#define KRED "\x1B[31m"
-#define KGRN "\x1B[32m"
-
 int main(int argc, char* argv[]) {
     const char *infile;
     const char *outfile;
@@ -74,7 +70,6 @@ int main(int argc, char* argv[]) {
 
     uint tour_grc_wack_sols = 0;
     for (uint iter = 0; iter < iters_n; ++iter) {
-        // printf("%u\n", iter);
         bool scrap = false;
 // === TOUR CREATION ===========================================================
         trip *tour = (trip*) malloc(sizeof(trip) * (trips_n));

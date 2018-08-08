@@ -2,7 +2,7 @@
 
 void read_input(const char *file, uint *trips_n, uint *hotels_n, uint *pois_n,
                 double **trips_len, vertex **v) {
-
+    // reads the given input file.
     FILE *in;
     in = fopen(file, "r");
 
@@ -42,7 +42,7 @@ void read_input(const char *file, uint *trips_n, uint *hotels_n, uint *pois_n,
     return;
 }
 void write_output(uint trips_n, trip *tour, vertex *v, const char *file) {
-
+    // writes to the given output file.
     FILE *out;
     out = fopen(file, "w");
 

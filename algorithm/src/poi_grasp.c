@@ -2,6 +2,7 @@
 
 void trip_grc(uint trips_n, uint hotels_n, uint pois_n, uint rcl,
               vertex *v, double **d_matrix, trip *tour) {
+    // performs the greedy randomized construction for the pois in each trip.
     vervec cndt_p;
     vervec_init(&cndt_p, pois_n);
     for (uint i = hotels_n; i < hotels_n + pois_n; ++i) vervec_endadd(&cndt_p, v[i]);
@@ -15,6 +16,7 @@ void trip_grc(uint trips_n, uint hotels_n, uint pois_n, uint rcl,
             }
             // TODO: If I manage to use qsort with v[idx] then I can change
             //          cndt_h from type vervec to uintvec and save memory.
+            //          I'll need a pointer to a function for that afaik.
             qsort(cndt_p.items, cndt_p.len, sizeof(vertex), vertex_cmp_asc);
 
             if (rcl > cndt_p.len) rcl = cndt_p.len;

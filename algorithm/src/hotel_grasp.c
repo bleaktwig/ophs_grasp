@@ -2,6 +2,7 @@
 
 bool tour_grc(uint trips_n, uint hotels_n, uint pois_n, uint rcl,
               vertex *v, double **d_matrix, trip *tour) {
+    // performs the greedy randomized construction for the hotels of each trip.
     if (endadd_v(&tour[0], v, 0, hotels_n, d_matrix, 0)) return 1;
 
     vervec cndt_h;

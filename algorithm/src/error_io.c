@@ -1,6 +1,7 @@
 #include "error_io.h"
 
 void usage() {
+    // prints the usage of the program.
     fprintf(stderr, "\n");
     fprintf(stderr, "usage: ophs_grasp infile outfile iter_n h_rcl p_rcl ");
     fprintf(stderr, "ls_iter_n random debug\n");
@@ -28,6 +29,7 @@ void usage() {
     return;
 }
 void error_handler(int error_id, const char *info) {
+    // prints the error information related to error_id.
     fprintf(stderr, "%s", KRED);
     // not enough memory [00]
     if      (error_id == 0)
