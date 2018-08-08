@@ -93,7 +93,6 @@ int main(int argc, char* argv[]) {
 // === TOUR POIS SELECTION =====================================================
         if (!scrap) trip_grc(trips_n, hotels_n, pois_n, p_rcl, v, d_matrix, tour);
 // === LOCAL SEARCH ============================================================
-        // TODO: this is where we are now
         if (!scrap) local_search(trips_n, hotels_n, pois_n, ls_iter_n, v, d_matrix, tour, iter);
 // === BEST VS CURRENT TOUR COMPARISON =========================================
         double tour_score_precalc = tour_score(trips_n, tour, v);

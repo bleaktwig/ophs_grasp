@@ -72,13 +72,43 @@ void local_search(uint trips_n, uint hotels_n, uint pois_n, uint iter_n,
             }
         }
 // === IN-TRIP SWAP ============================================================
-    // for each trip
-        // for each poi in trip
-            // check if swapping the poi to another position inside the trip can
-            //      improve the rem_len of the entire trip
-            // swap the first two pois found that improve the rem_len variable
-
-
+        for (uint t = 0; t < trips_n; ++t) {
+            for (uint p1 = 1; p1 < tour[t].route.len-1; ++p1) {
+                for (uint p2 = 1; p2 < tour[t].route.len-1; ++p2) {
+                    if (p1 < p2) {
+                        double old_len;
+                        double new_len;
+                        if (p2 - p1 == 1) {
+                            old_len =
+                                d_matrix[tour[t].route.items[p1-1]][tour[t].route.items[p1]] +
+                                d_matrix[tour[t].route.items[p1]][tour[t].route.items[p1+1]] +
+                                d_matrix[tour[t].route.items[p2-1]][tour[t].route.items[p2]] +
+                                d_matrix[tour[t].route.items[p2]][tour[t].route.items[p2+1]];
+                            new_len =
+                                d_matrix[tour[t].route.items[p1-1]][tour[t].route.items[p2]] +
+                                d_matrix[tour[t].route.items[p2]][tour[t].route.items[p1]] +
+                                d_matrix[tour[t].route.items[p2]][tour[t].route.items[p1]] +
+                                d_matrix[tour[t].route.items[p1]][tour[t].route.items[p2+1]];
+                        }
+                        else {
+                            old_len =
+                                d_matrix[tour[t].route.items[p1-1]][tour[t].route.items[p1]] +
+                                d_matrix[tour[t].route.items[p1]][tour[t].route.items[p1+1]] +
+                                d_matrix[tour[t].route.items[p2-1]][tour[t].route.items[p2]] +
+                                d_matrix[tour[t].route.items[p2]][tour[t].route.items[p2+1]];
+                            new_len =
+                                d_matrix[tour[t].route.items[p1-1]][tour[t].route.items[p2]] +
+                                d_matrix[tour[t].route.items[p2]][tour[t].route.items[p1+1]] +
+                                d_matrix[tour[t].route.items[p2-1]][tour[t].route.items[p1]] +
+                                d_matrix[tour[t].route.items[p1]][tour[t].route.items[p2+1]];
+                        }
+                        if (new_len - old_len < 0.0) {
+                            trip_exchange_v(&tour[t], p1, p2, v, hotels_n, pois_n, d_matrix);
+                        }
+                    }
+                }
+            }
+        }
     }
     cpoivec_free(&cndt_p);
     return;
