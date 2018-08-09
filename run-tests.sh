@@ -1,27 +1,28 @@
 #!/bin/bash
 
-# script for compiling the algorithm and running all the instances contained in
-#   the algorithm/instances directory. Giving the script an input from 1 to 5
-#   will select which set of instances directories to run, from the SET1
-#   directories to the SET5 folders). With an input of 0, it runs all instances.
+# script for compiling the algorithm and running it with a given set of instances.
+# usage: ./run-tests.sh N M
+#   N: represents the SET to run. Possible values:
+#      0: run all sets from 1 to 5, or under SET*/*.ophs
+#      1: run all sets under SET1_*/*.ophs
+#      2: run all sets under SET2_*/*.ophs
+#      3: run all sets under SET3_*/*.ophs
+#      4: run all sets under SET4/*.ophs
+#      5: run all sets under SET3*/*.ophs
+#   M: tells the program if it should make or not a picture of the solution found
+#       by using the "visualize.py" script, 1 meaning yes and 0 meaning no.
 
 SOURCEDIR="algorithm"
 INSTANCESDIR="instances"
 
-COMPILER="gcc"
-COMPILERFLAGS="-std=c11 -o"
-COMPILER="$COMPILER $COMPILERFLAGS"
-
-CRUN="./algorithm/bin/main"
+CRUN="./algorithm/bin/ophs_grasp.out"
 
 ITER_N="1000"
 H_RCL_SIZE="3"
 P_RCL_SIZE="3"
 LS_ITER_N="100"
-RAN="0"
+RAN="1"
 DEBUG="0"
-
-CRUNFLAGS="$ITER_N $H_RCL_SIZE $P_RCL_SIZE $LS_ITER_N $RAN $DEBUG"
 
 PRUN="python3 visualize.py"
 PMODE=1
@@ -42,10 +43,11 @@ function formatOutput () {
 
 STARTTIME=$(date +%s%N)
 
-# TODO: make so that this line is only executed if a "-c" flag is set.
 echo "============================="
 echo " + compiling..."
-$COMPILER $SOURCEDIR/bin/main $SOURCEDIR/src/*.c -lm
+cd algorithm
+make
+cd ..
 
 if [[ $1 = "1" || $1 = "0" ]]
 then
@@ -122,9 +124,13 @@ then
         fi
     done
 fi
+
+cd algorithm
+make clean
+cd ..
+
 ENDTIME=$(date +%s%N)
 TIMEMS=$((($ENDTIME - $STARTTIME)/1000000))
 echo "============================="
 echo "total execution time: $TIMEMS [ms]."
 echo "============================="
-rm algorithm/bin/*

@@ -2,9 +2,6 @@ import sys
 import matplotlib.pyplot as plt
 
 # === ARGUMENT HANDLING ========================================================
-# TODO: If I'm gonna publish this code I should handle these arguments in a
-#           better way. An explanation on how to do this can be seen here:
-#       http://www.diveintopython.net/scripts_and_streams/command_line_arguments.html
 fileName = sys.argv[1]
 save = int(sys.argv[2])
 
