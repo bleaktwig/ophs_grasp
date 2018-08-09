@@ -13,8 +13,8 @@ bool tour_grc(uint trips_n, uint hotels_n, uint pois_n, uint rcl,
         for (int j = 0; j < cndt_h.len; ++j) {
             cndt_h.items[j].tmp_score = d_add(tour[i].route.items[0], 1, cndt_h.items[j].idx, d_matrix);
         }
-        // TODO: If I manage to use qsort with v[idx] then I can I can change
-        //          cndt_h from type vervec to uintvec and save memory.
+        // TODO: If I manage to use qsort with v[idx] then I can change cndt_h
+        //          from type vervec to uintvec and save memory.
         qsort(cndt_h.items, cndt_h.len, sizeof(vertex), vertex_cmp_desc);
 
         if (rcl > cndt_h.len - 1) rcl = cndt_h.len - 1;
