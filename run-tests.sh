@@ -8,7 +8,7 @@
 #      2: run all sets under SET2_*/*.ophs
 #      3: run all sets under SET3_*/*.ophs
 #      4: run all sets under SET4/*.ophs
-#      5: run all sets under SET3*/*.ophs
+#      5: run all sets under SET5*/*.ophs
 #   M: tells the program if it should make or not a picture of the solution found
 #       by using the "visualize.py" script, 1 meaning yes and 0 meaning no.
 
@@ -21,7 +21,7 @@ ITER_N="1000"
 H_RCL_SIZE="3"
 P_RCL_SIZE="3"
 LS_ITER_N="100"
-RAN="1"
+RAN="0"
 DEBUG="0"
 
 PRUN="python3 visualize.py"
