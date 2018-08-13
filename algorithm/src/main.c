@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     uint p_rcl;
     uint ls_iter_n;
     uint random;
-    uint debug;
+    uint tune;
 
 // === PARAMETER HANDLING ======================================================
     if (argc == 9) {
@@ -32,33 +32,27 @@ int main(int argc, char* argv[]) {
         p_rcl = atoi(argv[5]);
         ls_iter_n = atoi(argv[6]);
         random = atoi(argv[7]);
-        debug = atoi(argv[8]);
+        tune = atoi(argv[8]);
     }
     else usage();
+
+    if (!tune) printf("Running on \"%s\" with %u iterations...\n", infile, iters_n);
     if (random) {
         uint seed = time(NULL);
         srand(seed);
-        if (debug) printf("Using the random seed %d\n", seed);
+        if (!tune) printf("    Using the random seed %d\n", seed);
     }
-
-    if (!debug) printf("Running on \"%s\" with %u iterations...\n", infile, iters_n);
 // === FILE READING ============================================================
-    if (debug) printf("=== READING FILE =================================\n");
     uint trips_n, hotels_n, pois_n;
     double *trips_len;
     vertex *v;
     read_input(infile, &trips_n, &hotels_n, &pois_n, &trips_len, &v);
-
-    if (debug >= 2) print_in_vars(trips_n, trips_len, hotels_n, pois_n, v);
 // === DISTANCES MATRIX CREATION ===============================================
-    if (debug) printf("=== CREATING DISTANCES MATRIX ====================\n");
     double **d_matrix = (double**) malloc(sizeof(double*) * (hotels_n + pois_n));
     for (uint i = 0; i < hotels_n + pois_n; ++i)
         d_matrix[i] = (double*) malloc(sizeof(double) * (hotels_n + pois_n));
     create_d_matrix(d_matrix, hotels_n + pois_n, v);
-    if (debug == 3) print_matrix(hotels_n + pois_n, d_matrix);
 // === MAIN LOOP ===============================================================
-    if (debug) printf("=== CREATING BEST TOUR AND STARTING LOOP =========\n");
     trip *best_tour = (trip*) malloc(sizeof(trip) * (trips_n));
     if (best_tour == NULL) error_handler(0, "main");
     for (uint i = 0; i < trips_n; ++i) {
@@ -105,25 +99,27 @@ int main(int argc, char* argv[]) {
                     uintvec_endadd(&best_tour[i].route, uintvec_endpop(&tmp_trip));
             }
             uintvec_free(&tmp_trip);
-            if (debug) printf("new best tour score: %.2f\n", best_tour_score);
         }
         for (uint i = 0; i < trips_n; ++i) uintvec_free(&tour[i].route);
         free(tour);
     }
 
-    if (tour_grc_wack_sols > 0) {
-        printf("%s    %u/%u solutions were scrapped by the tour grc.\n",
-                KRED, tour_grc_wack_sols, iters_n);
+// === OUTPUT TEXT AND FILE WRITING
+    if (!tune) {
+        if (tour_grc_wack_sols > 0) {
+            printf("%s    %u/%u solutions were scrapped by the tour grc.\n",
+                    KRED, tour_grc_wack_sols, iters_n);
+        }
+        if (tour_grc_wack_sols != iters_n) {
+            printf("%s    The best solution found has a score of: %.2f\n",
+                    KGRN, tour_score(trips_n, best_tour, v));
+        }
+        printf("%s", KNRM);
+        write_output(trips_n, best_tour, v, outfile);
     }
-    if (tour_grc_wack_sols != iters_n) {
-        printf("%s    The best solution found has a score of: %.2f\n",
-                KGRN, tour_score(trips_n, best_tour, v));
-    }
-    printf("%s", KNRM);
-// === OUTPUT FILE WRITING =====================================================
-    write_output(trips_n, best_tour, v, outfile);
+    else printf("%.0f\n", tour_score(trips_n, best_tour, v));
+
 // === MEMORY RELEASING ========================================================
-    if (debug) printf("=== RELEASING MEMORY =============================\n");
     free(trips_len);
     free(v);
     for (uint i = 0; i < hotels_n + pois_n; ++i) free(d_matrix[i]);

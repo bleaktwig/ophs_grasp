@@ -4,7 +4,7 @@ void usage() {
     // prints the usage of the program.
     fprintf(stderr, "\n");
     fprintf(stderr, "usage: ophs_grasp infile outfile iter_n h_rcl p_rcl ");
-    fprintf(stderr, "ls_iter_n random debug\n");
+    fprintf(stderr, "ls_iter_n random tune\n");
     fprintf(stderr, "  - const char*  infile:    ");
     fprintf(stderr, "    the input file\n");
     fprintf(stderr, "  - const char*  outfile:   ");
@@ -22,8 +22,8 @@ void usage() {
     fprintf(stderr, "    a flag telling the program to use a random ");
     fprintf(stderr, "seed\n");
     fprintf(stderr, "  - unsigned int debug:     ");
-    fprintf(stderr, "    an integer defining how much output the program ");
-    fprintf(stderr, "should give\n");
+    fprintf(stderr, "    an integer telling the program to print parameter ");
+    fprintf(stderr, "tuning data\n");
     fprintf(stderr, "\n");
     exit(1);
     return;
