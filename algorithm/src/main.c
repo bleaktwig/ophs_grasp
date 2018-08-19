@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
         free(tour);
     }
 
-// === OUTPUT TEXT AND FILE WRITING
+// === OUTPUT TEXT AND FILE WRITING ============================================
     if (!tune) {
         if (tour_grc_wack_sols > 0) {
             printf("%s    %u/%u solutions were scrapped by the tour grc.\n",

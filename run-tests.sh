@@ -17,12 +17,14 @@ INSTANCESDIR="instances"
 
 CRUN="./algorithm/bin/ophs_grasp.out"
 
-ITER_N="1000"
-H_RCL_SIZE="3"
-P_RCL_SIZE="3"
-LS_ITER_N="100"
-RAN="0"
+ITER_N="5000"
+H_RCL_SIZE="8"
+P_RCL_SIZE="5"
+LS_ITER_N="15"
+RAN="1"
 TUNE="0"
+
+# OUTFILE="params_tuning/seed_var/tests/$RAN"
 
 PRUN="python3 visualize.py"
 PMODE=1
@@ -41,13 +43,13 @@ function formatOutput () {
     return 0
 }
 
-STARTTIME=$(date +%s%N)
-
 echo "============================="
 echo " + compiling..."
 cd algorithm
 make
 cd ..
+
+STARTTIME=$(date +%s%N)
 
 if [[ $1 = "1" || $1 = "0" ]]
 then
@@ -57,7 +59,7 @@ then
 
     for f in $INSTANCESDIR/SET1_*/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE"
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE" #>> $OUTFILE
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
@@ -72,7 +74,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET2_*/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE"
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE" #>> $OUTFILE
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
@@ -87,7 +89,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET3_*/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE"
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE" #>> $OUTFILE
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
@@ -102,7 +104,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET4/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE"
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE" #>> $OUTFILE
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
@@ -117,7 +119,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET5_*/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE"
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE" #>> $OUTFILE
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
