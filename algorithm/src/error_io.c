@@ -21,7 +21,7 @@ void usage() {
     fprintf(stderr, "  - unsigned int random:    ");
     fprintf(stderr, "    a flag telling the program to use a random ");
     fprintf(stderr, "seed\n");
-    fprintf(stderr, "  - unsigned int debug:     ");
+    fprintf(stderr, "  - unsigned int tune:     ");
     fprintf(stderr, "    an integer telling the program to print parameter ");
     fprintf(stderr, "tuning data\n");
     fprintf(stderr, "\n");

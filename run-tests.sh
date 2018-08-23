@@ -9,8 +9,8 @@
 #      3: run all sets under SET3_*/*.ophs
 #      4: run all sets under SET4/*.ophs
 #      5: run all sets under SET5*/*.ophs
-#   M: tells the program if it should make or not a picture of the solution found
-#       by using the "visualize.py" script, 1 meaning yes and 0 meaning no.
+#   M: tells the program if it should plot or not a picture of the solution
+#      found by using the "visualize.py" script, 1 meaning yes and 0 meaning no.
 
 SOURCEDIR="algorithm"
 INSTANCESDIR="instances"
@@ -23,8 +23,6 @@ P_RCL_SIZE="5"
 LS_ITER_N="15"
 RAN="1"
 TUNE="0"
-
-# OUTFILE="params_tuning/seed_var/tests/$RAN"
 
 PRUN="python3 visualize.py"
 PMODE=1
@@ -59,7 +57,7 @@ then
 
     for f in $INSTANCESDIR/SET1_*/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE" #>> $OUTFILE
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE"
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
@@ -74,7 +72,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET2_*/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE" #>> $OUTFILE
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE"
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
@@ -89,7 +87,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET3_*/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE" #>> $OUTFILE
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE"
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
@@ -104,7 +102,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET4/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE" #>> $OUTFILE
+        valgrind --leak-check=full $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE"
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
@@ -119,7 +117,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET5_*/*
     do
-        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE" #>> $OUTFILE
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE"
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
