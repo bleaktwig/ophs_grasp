@@ -10,6 +10,9 @@ A Greedy Randomized Adaptive Search Procedure (GRASP) is a metaheuristic algorit
 ### Instances
 The instances are inside the `instances/` directory, along with a format description. They were downloaded from [KU Leuven](https://www.mech.kuleuven.be/en/cib/op#section-14).
 
+### Compiling:
+To compile, simply run the command `make` inside the `algorithm/` directory and let the makefile do its job. As per standard, to clean the output, just run the command `make clean`.
+
 ### Running:
 The C code is inside the `algorithm/src/` directory and its compiled output is stored in the `algorithm/bin/` as `ophs_grasp.out`. The parameters given to it are:
 * `const char* infile`: the input file.
