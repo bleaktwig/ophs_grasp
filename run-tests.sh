@@ -102,7 +102,7 @@ then
     echo "============================="
     for f in $INSTANCESDIR/SET4/*
     do
-        valgrind --leak-check=full $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE"
+        $CRUN "$f" "$(formatOutput "$f")" "$ITER_N" "$H_RCL_SIZE" "$P_RCL_SIZE" "$LS_ITER_N" "$RAN" "$TUNE"
         if [[ $2 = "1" ]]
         then
             $PRUN "$(formatPython "$f")" $PMODE
