@@ -39,4 +39,9 @@ There's a python script inside the main directory named `visualize.py` which can
 
 To run the algorithm and the visualization script in a fast manner for all or a subset of the instances, there is a shell script in the main directory named `run-tests.sh`. It's usage is simple:
 * `$1`: an integer from `0` to `5` that tells the script what set of instances to run, where `1` to `5` correlate directly to a set of instances (SET1 through SET5), and `0` tells the script to simply run on all the given instances for simplicity.
-* `$2`: an integer that can be either `0` or `1`, where `0` tells the script to only run the algorithm while `1` points it to also run the visualization script.
+* `$2`: an integer that can be either `0` or `1`, where `0` tells the script to only run the algorithm while `1` points it to also run the visualization script for each instance.
+
+### Future Work:
+* Add more movements to the Local Search phase to improve the search space. The ones mentioned in the conclusions of the paper should be good for a start.
+* Scrap the multi-level approach and build the solutions more dynamically, scrapping the whole tour GRC approach.
+* Work on a simple purely greedy approach to the problem to compare the solutions obtained by it to the ones obtained by the developed algorithm.

@@ -1,0 +1,42 @@
+In order to test the performance of the algorithm, it was tested on all previously available instances made in ~\cite{divsalar2013} and ~\cite{divsalar2014}. The implementation of the algorithm was written in pure \textbf{C}, the testing was done via \textbf{bash}, and the parameter tuning information was processed via \textbf{Python}, plotting with \textbf{MatPlotLib}. All the code base for the algorithm itself, the testing and plotting scripts can be accessed in \textbf{GitHub} under the \textbf{ophs\_grasp} repository (\url{<https://github.com/bleaktwig/ophs\_grasp>}), along with instructions to its correct use in the readme. All computations were carried out on a notebook Inter Core i5 6th-generation with $3.50$ GHz processor and $8.00$ GB RAM, with no parallelization.
+
+The results are compared with the known optimal solution, along with the results of the skewed variable neighborhood search algorithm published in ~\cite{divsalar2013} and the memetic algorithms presented in ~\cite{divsalar2014}. A summary of these results is displayed in Table 5, where the first column shows the set of instances, the second column indicates the maximum TNFS in this set. Afterwards, the average percentage gap, the maximal percentage gap and the number of instances for which the optimal solution is found are displayed for the MA, SVNS and GRASP algorithms. Due to the randomness of the developed algorithm, it was applied on each instance three times. Finally, the average CPU time for the GRASP algorithm is displayed, comparing it to the average CPU time for the MA and SVNS algorithms. This results should be taken with a grain of salt, since these two algorithms were ran on a personal computer Intel Core 2 with $3.00$ GHz processor and $4.00$ GB RAM, providing less computational power than the one offered by the author's machine. The gap between the optimal result and the solution obtained by each algorithm is obtained in the following manner:
+$100 \times \Big(\frac{\text{optimal result} - \text{algorithm result}}{optimal result}\Big)\%$. The results for each instance separately are shown in the Appendix A.
+
+It is easy to see that the results obtained by the GRASP algorithm are very poor when compared to MA and SVNS. This deficiency is attributed to two main issues with the algorithm: First, simply that the local search phase doesn't have enough movements as to thoroughly go through the solution space to search for a good local optimum due to its very constrained solution neighborhood, and second, that the tour greedy construction search phase doesn't really contribute with good initial solutions anyway, working very randomly.
+
+To fix these issues, it is planned to implement at least eight more movements to the local search phase to further improve the solutions and reach good local optima for each. The movements that are to be added are \textbf{Move-best}, \textbf{Two-Opt}, \textbf{Swap-trips}, \textbf{Extract-Insert}, \textbf{Extract2-Insert} \textbf{ExtractN-Insert}, \textbf{Extract-Move-Insert} and \textbf{Replacement}, which are the ones proven to be best for a TOP~\cite{divsalar2013}. Fixing the tour greedy construction phase is a harder task, since it's problem lies in it's design. Two solutions are hypothesized, adding a Repair phase after the tour GRC to improve the initial solutions and to fix the ones that are unfeasible from their conception, and simply scrapping the GRC approach to the generation of the tours, opting for a different algorithm inspired by how the Total Number of Feasible Sequences of Hotels affects the solutions found.
+
+\begin{center}
+    \begin{table}[]
+    \centering
+    \begin{adjustwidth}{-1in}{-1in}
+    \begin{tabular}{|ll|lll|lll|lll|lll|}
+\hline
+\multicolumn{2}{|l}{} & \multicolumn{3}{|l}{MA} & \multicolumn{3}{|l}{SVNS} & \multicolumn{3}{|l}{GRASP} & \multicolumn{3}{|l|}{CPU Times} \\
+\hline
+Name & Max TNFS & Avg & Max & \# Opt & Avg & Max & \# Opt & Avg & Max & \# Opt & MA & SVNS & GRASP \\
+1H2T  & $3                $ & $3.32$ & $13.91$ & $11$  & $1.22 $ & $7.55 $ & $18$  & $10.69$  & $22.95$  & $2$   & $1.84 $ & $0.12 $ & $2.02 $ \\
+2H3T  & $16               $ & $0.88$ & $4.34 $ & $17$  & $0.93 $ & $5.19 $ & $19$  & $11.21$  & $24.02$  & $0$   & $1.43 $ & $0.14 $ & $2.04 $ \\
+3H4T  & $125              $ & $0.60$ & $4.89 $ & $21$  & $0.92 $ & $5.00 $ & $18$  & $12.61$  & $27.89$  & $0$   & $1.09 $ & $0.41 $ & $1.91 $ \\
+5H3T  & $49               $ & $0.81$ & $3.42 $ & $18$  & $0.93 $ & $4.05 $ & $19$  & $13.32$  & $26.70$  & $1$   & $1.41 $ & $0.21 $ & $1.64 $ \\
+6H4T  & $512              $ & $0.64$ & $4.22 $ & $18$  & $1.21 $ & $5.19 $ & $17$  & $15.37$  & $27.76$  & $0$   & $1.15 $ & $0.88 $ & $1.63 $ \\
+10H4T & $1728             $ & $1.72$ & $4.01 $ & $3 $  & $2.61 $ & $8.17 $ & $3 $  & $17.22$  & $25.59$  & $0$   & $6.59 $ & $5.12 $ & $5.19 $ \\
+10H5T & $20736            $ & $1.99$ & $6.40 $ & $3 $  & $4.15 $ & $9.93 $ & $4 $  & $22.92$  & $46.60$  & $0$   & $5.43 $ & $4.26 $ & $4.59 $ \\
+10H6T & $248832           $ & $2.30$ & $7.70 $ & $4 $  & $6.27 $ & $12.77$ & $4 $  & $25.56$  & $50.99$  & $0$   & $4.66 $ & $3.83 $ & $3.92 $ \\
+12H4T & $2744             $ & $1.78$ & $5.16 $ & $5 $  & $2.73 $ & $6.08 $ & $2 $  & $17.93$  & $26.19$  & $0$   & $6.50 $ & $5.01 $ & $5.22 $ \\
+12H5T & $38416            $ & $1.98$ & $5.15 $ & $4 $  & $3.58 $ & $8.68 $ & $4 $  & $21.82$  & $41.50$  & $0$   & $11.53$ & $8.73 $ & $8.13 $ \\
+12H6T & $537824           $ & $2.28$ & $6.24 $ & $5 $  & $5.63 $ & $12.85$ & $3 $  & $24.33$  & $77.98$  & $0$   & $3.49 $ & $3.84 $ & $3.36 $ \\
+15H4T & $4913             $ & $1.92$ & $5.15 $ & $3 $  & $2.66 $ & $5.76 $ & $2 $  & $16.53$  & $29.61$  & $0$   & $6.63 $ & $4.95 $ & $5.03 $ \\
+15H5T & $83521            $ & $2.22$ & $4.42 $ & $3 $  & $4.42 $ & $11.52$ & $4 $  & $20.63$  & $41.99$  & $0$   & $5.41 $ & $4.20 $ & $4.22 $ \\
+15H6T & $1419857          $ & $2.55$ & $6.11 $ & $4 $  & $6.86 $ & $13.52$ & $4 $  & $24.54$  & $59.33$  & $0$   & $4.78 $ & $4.29 $ & $3.47 $ \\
+15H8T & $410338673        $ & $3.66$ & $9.75 $ & $1 $  & $15.54$ & $22.37$ & $0 $  & $32.49$  & $44.12$  & $0$   & $5.16 $ & $53.62$ & $1.42 $ \\
+15H10T& $1.19\times10^{11}$ & $5.03$ & $9.25 $ & $1 $  & $-    $ & $-    $ & $0 $  & $38.57$  & $55.28$  & $0$   & $5.04 $ & $-    $ & $0.19 $ \\
+SET4  & $25               $ & $7.38$ & $23.66$ & $4 $  & $7.44 $ & $23.66$ & $4 $  & $22.24$  & $26.06$  & $0$   & $1.17 $ & $0.24 $ & $3.93 $ \\
+\hline
+    \end{tabular}
+    \end{adjustwidth}
+    \caption{Experiments Results}
+    \label{results}
+    \end{table}
+\end{center}

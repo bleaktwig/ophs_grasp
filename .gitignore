@@ -30,7 +30,3 @@
 *.exe
 *.out
 *.app
-
-# results
-results/*
-results/tables/*

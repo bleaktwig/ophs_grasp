@@ -1,0 +1,152 @@
+In this section, some of the proposed algorithms to find solutions for the OPHS are discussed. Since there are not many publications concerning this specific problem, some of the algorithms developed for similar problems are also discussed, alongside the changes that would need to be applied to these to have them work on the OPHS.
+
+\subsection{Proposed algorithms for the OPHS}
+
+\subsubsection{A variable neighborhood search method for the orienteering problem with hotel selection}
+
+    Divsalar et al.~\cite{divsalar2013}, apart from originally presenting the problem, proposed the first algorithm to find solutions for it. The algorithm is a metaheuristic that combines different moves using a modified variable neighborhood search framework (VNS) called Skewed VNS (SVNS). This variant of VNS is often used to tackle problems with well separated near-optimal solutions because it accepts solutions with slightly worse scores, and this is exactly the case with the OPHS.
+
+    \textbf{Initialization}: The algorithm is initialized by creating a matrix of potential scores between pairs of hotels by solving a sub-OP between every pair of hotels, even considering the situations where the start and end hotels are the same. Only a straightforward local search method is used with four common movements: \textbf{Insert}, \textbf{Replacement}, \textbf{Two-Opt} and \textbf{Move-best}, applied as long as improvements are found. After this local search, a list of all feasible combinations of hotels is developed by using the matrix of hotels and simple calculations. Next, an estimated score is calculated for each feasible combination of hotels and this list is sorted, using the best solutions as the initial solutions.
+
+    \textbf{Shaking Phase}: To promote diversification, the POIs are shaken slightly on each trip. After this, the algorithm tries to increase the quality of the solutions by replacing some of the hotels visited during the tour with one of the hotels with the best scores calculated in the initialization phase. After that, the same local search is used once again to improve the solution.
+
+    \textbf{Local Search}: Once the hotels in a tour are fixed, the OPHS becomes a TOP. Therefore, the best local search moves already proven for this problem are used, which are \textbf{Insert}, \textbf{Move-best}, \textbf{Two-Opt}, \textbf{Swap-trips}, \textbf{Extract-Insert}, \textbf{Extract2-Insert}, \textbf{Extract5-Insert}, \textbf{Extract-Move-Insert} and \textbf{Replacement}. A detailed description of each of these moves is described in the cited document.
+
+    \textbf{Recentering Phase}: Each time a local search is finished, the algorithm decides which solution will be used to start the next iteration. As long as the current solution is not worse than the previous one by more than a given parameter, named \textit{MaxPercentageWorse}, this solution will be used for the next iteration.
+
+    \textbf{Parameter Sensitivity}: Four parameters are used in the algorithm, which are \textit{NoImprovementsMax}, \textit{NUFC}, \textit{MaxPercentageWorse} and \textit{Kmax}. \textit{NoImprovementsMax} simply states how many iterations without improvement are allowed before the end of the algorithm is reached, and it can be replaced with a given stopping point if needed. \textit{NUFC} describes the number of considered combinations of hotels, and naturally a higher number increases the computation time while generally increasing the quality of the solutions found. \textit{MaxPercentageWorse} was already visited in the last paragraph, and it describes how worse one solution can be over the last one used. \textit{Kmax} determines the maximum number of alternative hotel combinations that are considered in the hotels-shake phase before recentering. Alongside \textit{NoImprovementsMax} and \textit{NUFC}, higher numbers increase the computation time while improving the quality of the solutions. As a final remark, it is worth noting the algorithm is considered robust, since the number of used parameters isn't too high and small changes to these do not significantly affect the performance of the algorithm.
+    
+\subsubsection{A memetic algorithm for the orienteering problem with hotel selection}
+
+    Proposed originally by Divsalar et al.~\cite{divsalar2014}, this algorithm is based on the supposition that it is impossible to predict which selection of hotels will result in a good solution, so it's valid to separate an algorithm is two levels: One focusing only on the hotel selection and the other one in the selection of POIs. The algorithm proposed on this paper is a memetic algorithm where an evolutionary algorithm selects the hotels in the tour and then a local search selects the POIs in each trip. It is worth noting that a very similar memetic algorithm is also used on another publication by Castro et al.~\cite{castro2013} to solve the TSPHM.
+
+    \textbf{Initialization}: The initialization phase is unchanged from the last algorithm.
+    
+    \textbf{Main Loop}: The selection method used is the roulette wheel, where each solution has a probability proportional to its solution quality, and The stopping condition is simply based on a maximum number of iterations (\textit{Max-Iteration}).
+    
+    For the next pool of solutions, some of the solutions of the current population are used, as well as new solutions made by applying two Genetic Algorithm (GA) crossovers: \textbf{Crossover I}, which swaps hotels based on the scores saved in the matrix of pairs of hotels described in the last algorithm, and \textbf{Crossover II}, which swaps whole sub-sequences of hotels from two tours, later pruning POIs in order to make each trip feasible. A \textbf{mutation operator} is also used to improve solutions, which just swaps one end hotel in a trip with the best possible one when compared to the initial hotel of this trip. The population management part of the algorithm is done in such a way that promotes both quality and diversity of the solutions in the pool, and is based on the concept of Memetic Algorithms with Population Management, introduced by S\"orensen and Sevaux~\cite{sorensen2006}.
+
+    \textbf{Local Search}: a variable neighborhood descent with six local search moves is used. \textit{Insert} tries to insert non-included POIs as long as it's feasible. \textit{Move-Best} tries to move an already visited POI in a trip to another location with the intent to decrease the length of the tour. \textit{Two-Opt} checks if by inverting a selection of two POIs the travel time in each trip can be decreased. \textit{Swap-Best} exchanges two different POIs from two different trips to see if it can reduce total travel time. \textit{Extract-Insert} tries to switch the first POI in every trip with another, unvisited POI. Finally, \textit{Extract2-Insert} is identical to the previous move, but it considers two consecutive POIs instead of just the first one.
+
+    \textbf{Parameter Sensitivity}: The algorithm presents six parameters in total: \textit{MaxIteration}, \textit{PopSize}, \textit{CRI$_R$}, \textit{CRII$_R$}, \textit{BestSel$_R$} and \textit{TabuSize}, offering a fine control on each execution on the algorithm. \textit{MaxIteration} simply defines the amount of iterations to be executed before stopping. \textit{PopSize} defines the size of the population for each iteration, while \textit{CRI$_R$} and \textit{CRII$_R$} define how much of this population is occupied with members of the last population, from the two crossovers and from the mutation movement, all relative to the population size. \textit{BestSel$_R$} is used in the population management, and defines how many of the best solutions are used in the next population. Finally, \textit{TabuSize} simply defines the number of iterations in the mutation operator for which the same hotel is not selected for the same trip.
+    
+    Despite the large amount of parameters, it is stated as well that small changes in these parameters values do not have a significant impact on the performance on the algorithm, obviously besides the ones that decide the amount of iterations performed (\textit{MaxIteration}) and the population size (\textit{PopSize}). Based on how complex the algorithm implemented is, the amount of parameters is considered justified as to give enough control to each iteration.
+    
+    The performance of the two algorithms is compared in table 1 using instances created by Divsalar et al. in their two examined publications~\cite{divsalar2013}~\cite{divsalar2014}. The results are compared based on the average and the maximum gap from the optimal solution, the number of optimal solutions found and the average computation time for each set of instances. The average max TNFS per set of instances is shown as well, as it greatly affects the results obtained, as was explained in the second section, and the instances set are defined based on the number of trips on each. More detailed tables for both algorithms can be reviewed at Divsalar et al.~\cite{divsalar2014}
+    
+    As can be seen on the table, generally for instances containing more than $3$ trips, the MA produces higher quality solutions than the SVNS, but usually finding less optimal solutions. It is also worth attention that the SVNS is considerably faster on small instances, but when tackling larger ones it easily falls short, and it was even completely unable to find solutions for instances with $10$ trips due to too long computation times.
+    
+    As a last remark concerning the algorithms developed for the OPHS, it is worth noting that no author has worked on a simple multi-level Greedy algorithm to tackle the problem. An algorithm like this would probably not provide great solutions, but the ones found would at least provide a good benchmark for comparison, especially for instances were no other algorithm has found solutions yet, as was the case for the nine instances with $10$ trips for the OPHS before the discussed Memetic Algorithm was published.
+    
+    \begin{center}
+        \begin{table}[]
+            \centering
+            \begin{tabular}{|lr|rr|rr|rr|rr|}
+                \hline \multicolumn{2}{|c|}{} & 
+                \multicolumn{2}{c|}{Avg. Gap (\%)} & \multicolumn{2}{c|}{Max. Gap (\%)} &
+                \multicolumn{2}{c|}{\# Opt.} &
+                \multicolumn{2}{c|}{Avg. CPU}\\
+                Name & Max TNFS & MA & SVNS & MA & SVNS & MA & SVNS & MA & SVNS  \\
+                \hline
+                2 trips  & $3$ & $2.38$ & $1.22$ & $10.80$ & $7.55$ & $13/70$ & $18/70$ & $2.215$ & $0.12$ \\
+                3 trips  & $32$ & $0.83$ & $0.81$ & $3.88$ & $4.57$ & $39/75$ & $42/75$ & $1.40$ & $0.18$ \\
+                4 trips  & $1,682$ & $1.20$ & $1.84$ & $4.66$ & $5.86$ & $50/136$ & $43/136$ & $3.77$ & $2.77$ \\
+                5 trips  & $47,558$ & $2.06$ & $4.05$ & $5.78$ & $10.04$ & $10/66$ & $12/66$ & $5.43$ & $4.26$ \\
+                6 trips  & $745,504$ & $2.38$ & $6.19$ & $6.68$ & $13.05$ & $13/66$ & $11/66$ & $4.31$ & $3.99$ \\
+                8 trips  & $410,338,673$ & $3.66$ & $15.54$ & $9.75$ & $22.37$ & $1/13$ & $0/13$ & $5.16$ & $53.62$ \\
+                10 trips & $1.186\times10^{11}$ & $5.03$ & - & $9.25$ & - & $1/9$ & - & $5.04$ & - \\
+                \hline
+            \end{tabular}  
+            \caption{Algorithms for the OPHS}
+            \label{TSPHS comparison}
+        \end{table}
+    \end{center}
+
+\subsection{Proposed algorithms for the TSPHS}
+
+    Due to how there are not many publications regarding the OPHS and how similar it is to the TSPHS, two algorithms developed for this second problem will be examined as well. The only difference between the TSPHS and the OPHS is that in the TSPHS optimizes the time in which all nodes are visited and the OPHS optimizes a selection of nodes to be visited. This in turn leads to another important optimization in the OPHS that is not present in the TSPHS, which is that of the locations for the starting and ending hotels for the tour.
+    
+    The main issue with the TSPHS is that, as stated by Vansteenwegen et al.~\cite{vansteenwegen2012}, the choice for the lexicographical ordering of the objectives is non-linear. If, however, the number of trips is fixed, the problem can be formulated as a mixed-integer linear programming (MILP) problem, while also incidentally brings it closer to the OPHS.
+
+\subsubsection{First algorithm for solving the TSPHS}
+
+    In the original publication where the TSPHS was proposed~\cite{vansteenwegen2012}, a simple algorithm was proposed to deal with the problem efficiently. Two initialization methods are used and a local search is applied to improve the solutions found.
+
+    \textbf{Initialization I1}: The first initialization basically a greedy algorithm which retains feasibility. Solutions are generated based on the nearest neighbour principle, namely, the customer closest to the previous one is added to the trip as long as one of the hotels can be reached within the remaining allowed time.
+
+    \textbf{Initialization I2}: The second initialization uses a heuristic to build an unfeasible solution that only contains POIs and violates the travel time limit. This solution is later improved using a local search method with the \textbf{2-Opt} and \textbf{Or-Opt} movements. Once the travel distance has been minimized, the tour is split up in trips that respect the time budget. It is important to note that this initialization technique can be used to build solutions with a variable number of trips, and thus it is more faithful to the original lexicographical ordering of the objectives.
+    
+    \textbf{Local Search}: After building the initial solutions, four local search movements are implemented to improve them. The well-known \textbf{2-Opt} is used, where pairs of nodes are exchanged. \textbf{Re-Opt} is also later used as a generalization of \textbf{Or-Opt}, where a chain of consecutive customers inside one trip or from one to another are relocated. The two other movements are built specifically for this problem, and are \textbf{ImproveHotels}, which simply tries to replace one or more of the current selected hotels by another one in order to reduce the total travel time, and \textbf{Reduce}, which tries to eliminate one tour from the schedule.
+    
+    \textbf{Parameter Sensitivity}: Due to its simplicity, the algorithm doesn't use any parameters. This works in favor and against it, since there are also no random factors in its execution, so under a given same instance of the problem it will always return the same two solutions.
+    
+    To have this algorithm work on building solutions for the OPHS, only the first initialization method could be used, and it would need to be changed to only allow the construction of a given number of trips, and on all the local search methods applied the \textbf{Insert} move would need to be applied alongside the other ones used, to allow the addition of new POIs on each trip.
+
+\subsubsection{A fast metaheuristic for the TSPHS}
+
+    Another powerful metaheuristic was proposed by Castro et al.~\cite{castro2014} to construct an initial solution from scratch and improve it in only a portion of a second.
+    
+    \textbf{Construction of an initial solution}: First of all, by means of the Lin-Kernighan heuristic~\cite{lin1973} as implemented by Applegate et al.~\cite{applegate2006}, a tour in constructed considering only the constraints of the TSP, so that all customers are visited without considering the time limit. After this, the tour is split optimally using and algorithm inspired by a splitting procedure by Prins~\cite{prins2004}.
+    
+    \textbf{Improvement of the initial solution}: A Variable Neighbourhood Descent is used with a constantly changing neighbourhood based in the idea that a local optimum in one neighbourhood is not necessarily a local optimum with respect to another one. The neighbourhoods are built based on four moves, namely \textbf{Relocate}, \textbf{Exchange}, \textbf{ChangeHotels} and \textbf{JoinTrips}. Each neighbourhood is sequentially explored and the search is performed in a best-improvement fashion. Also, the search over each neighbourhood is repeated as long as a better solution can be found in it.
+    
+    In order to introduce diversification into the search, two perturbation operators are added to the algorithm, namely, $P_1$ and $P_2$. This operators work towards improving the solution obtained, and they introduce two new parameters, $\theta_1$ and $\theta_2$ respectively.
+    
+    \textbf{Parameter Sensitivity}: Since the metaheuristic itself is deterministic, the performance only depends on the parameters $i_{max}$, which defines the maximum number of iterations performed, and $\theta_1$ and $\theta_2$, which were explained before. There is also a hidden parameter which is $\omega$, which defines the penalty given to unfeasible solutions, but it is set at $\omega=10.000$ as that's the value that provided the best results for the authors. It is worth noting that all the other three parameters influence greatly the quality of the solution found and the computational time required to find it, but the authors found an specific number in which to set $\theta_1$ and $\theta_2$ to provide the best solutions for all the instances in which tests were performed.
+    
+    It is worth noting that this algorithm doesn't have a multilevel approach, meaning that it doesn't make the selection of hotels a separate one from the selection of POIs, which is probably linked to its astonishingly efficient computational times and general good quality of its results. Due to the lack of a multilevel approach and how focused the whole metaheuristic is on the TSP, it is hard to see a direct implementation of the algorithm for the OPHS, but the idea of how well a heuristic without a multilevel approach can perform in such a problem is useful in the development of an efficient algorithm for the OPHS.
+
+    The number of best known solutions, average and maximum gap from optimal solutions and average execution times for both explained algorithms (I2LS and P-LS respectively) and a third memetic algorithm implemented by Castro et al.~\cite{castro2013} are shown in the table 2. The algorithms are compared using four benchmark instances known as SET1, SET2, SET3 and SET4. All instances are publicly available at \textless antor.ua.ac.be/tsphs\textgreater. The values for which information is unavailable are marked with a minus symbol (-). SET2 and SET4 are special, in the sense that in SET2 the optimal solutions are not found, so the results obtained by MA are considered the best results, and in SET4 some, but not all, of the best results are not known and for those the ones found by MA are considered the best.
+    
+    It is easy to see that, generally, the best solutions for the problem are found by the MA, but its computation times are also much larger than the ones of the P-LS algorithm. It is worth noting as well that on SET4, the P-LS algorithm found 4 previously unknown best-known solutions, even with much lower computation times than the MA and the I2LS. This is attributed to the fact that the algorithm doesn't possess a multi-level approach.
+    
+    \begin{center}
+        \begin{table}[]
+            \centering
+            \begin{tabular}{|l|rrr|}
+                \hline & MA & I2LS & P-LS  \\
+                \hline SET1 num. best-known & 16/16 & 0/16 & 3/16 \\
+                SET1 Avg. gap (\%) & 0.00 & 2.64 & 0.33 \\
+                SET1 Max. gap (\%) &  &  &  \\
+                SET1 Avg. time & 108.0 & 1.9 & 0.5 \\
+                \hline SET2 num. best-known & - & 12/52 & 42/52 \\
+                SET2 Avg. gap (\%) & - & 2.38 & .015 \\
+                SET2 Max. gap (\%) &  &  &  \\
+                \hline SET3 num. best-known & 42/48 & 1/48 & 39/48 \\
+                SET3 Avg. gap (\%) & 0.14 & 12.61 & 0.42 \\
+                SET3 Max. gap (\%) &  &  &  \\
+                SET3 Avg. time & 276.3 & 565.2 & 1.7 \\
+                \hline SET4 num. best-known & 10/15 & 0/15 & 6/15 \\
+                SET4 Avg. gap (\%) & - & 10.05 & 0.25 \\
+                SET4 Max. gap (\%) &  &  &  \\
+                SET4 Avg. time & 317.4 & 310.7 & 2.5 \\
+                \hline
+            \end{tabular}  
+            \caption{Algorithms for the TSPHS}
+            \label{TSPHS comparison}
+        \end{table}
+    \end{center}
+
+\subsection{Proposed algorithms for the OP and TOP}
+
+    Since the OPHS is based on the OP, some of the most recent algorithms proposed for this problem are studied and ideas are given on how to adapt these algorithms for the OPHS itself. Algorithms for the TOP are also briefly explained, since the sub-problem of deciding each trip for the OPHS can be described as a TOP, apart from the general similarity between the two problems.
+    
+    In simple terms, the OP is picking an initial and end nodes and then optimizing the score collected a trip between them in the same manner as in the OPHS while respecting a general time budget usually referred to as $T_{max}$. The TOP is the OP with the addition of various travellers.
+    
+    The algorithms reviewed in this section are all taken from the latest survey for the OP by Gunawan et al.~\cite{gunawan2016}, and a more detailed description for each can be found on each cited publication.
+    
+\subsubsection{Multi-Level VNS (ML-VNS) for the OP}
+
+    Developed by Liang et al.~\cite{liang2013}, this algorithm is based on the VNS which allows for identical instances to be solved concurrently to reduce computational resources. The algorithm consists in four well defined phases: First, a set of initial solutions is generated, and a set of neighbourhoods is properly defined around each of these solutions. Then, for the main loop of the algorithm, the best solutions in each neighbourhood is found and then this set is perturbed randomly. This loop is repeated until a stopping criterion is met.
+
+\subsubsection{Greedy Randomized Adaptive Search Procedure with Path Relinking (GRASP-PR) for the OP}
+
+    Proposed by Campos et al.~\cite{campos2014} and based on GRASP~\cite{resende2003}, four construction methods are proposed and local search is applied afterwards to improve the results. for the first construction method or \textbf{C1}, a Restricted Candidate List (RCL) is built using the best nodes in a greedy fashion based on the score added by each node, and then a member from this list is selected randomly. It is worth noting that, after a local search, this method provided the best solutions.  \textbf{C2} builds its RCL randomly and then picks a node from it in a greedy fashion. \textbf{C3} and \textbf{C4} work similarly to \textbf{C1} and \textbf{C2}, but for the greedy choices they use the score collected divided by the increment in time added by each node instead of just the score. The selection of solutions used later for the local search are based on the quality and diversity of each solution, and the local search itself first exchanges nodes in-between the formed trip and then tries to insert unvisited nodes.
+
+\subsubsection{Multi-start Simulated Annealing (MSA) for the TOP}
+
+    A hybrid metaheuristic is proposed by Lin~\cite{lin2013}, who develops an algorithm based on the Simulated Annealing (SA) metaheuristic improved by the Multi-Start Hill Climbing (MS-HC) strategy. The publication demostrated that the MS-HC strategy greatly improved the performance of classical SA heuristics on well-known benchmark problems, while also being highly effective when compared to the state of the art metaheuristics on the same instances. The great performance of the algorithm is reliant on the fact the by including the MS-HC strategy, the possibility of getting trapped in a local optima is minimized.
+
+\subsubsection{Pareto Mimic Algorithm (PMA) for the TOP}
+
+    A more recent and innovative algorithm is proposed by Ke et al.~\cite{kee2015}, called Pareto Mimic Algorithm (PMA). A population of incumbent solutions is regularly updated using Pareto dominance, or improving the quality of some solutions without damaging others. This is done using a new operator, called \textbf{mimic} operator, to generate a new solution by imitating an incumbent one. The proposed algorithm also then tries to improve the quality of this imitating solutions by using a new operator, \textbf{Swallow}, which simply attempts to insert an infeasible node and then repair the resulting infeasible solution. It is worth noting that the algorithm is highly effective at finding new better results for several large-scale instances, and that the algorithm can be generalized to solve other routing problems.

@@ -1,0 +1,26 @@
+The representation given to each variable in the problem is fairly simple, yet powerful at the same time since it allows for an inexpensive way to check if any restriction has been broken. The structures used to represent the data are the following:
+
+\begin{itemize}
+    \item \textbf{Vertex}: A vertex is a structure containing the different data pertaining to each hotel or POI. The data in each vertex is:
+    \begin{itemize}
+        \item unsigned integer \textbf{idx}: The index of the vertex.
+        \item double \textbf{x}: The position in the horizontal dimension of the vertex.
+        \item double \textbf{y}: The position in the vertical dimension of the vertex.
+        \item double \textbf{score}: The score associated with visiting the vertex.
+    \end{itemize}
+    Apart from these variables, each vertex also has two special variables used for simplifying working with them, which is one double \textbf{tmp\_score} variable to ease calculations and a boolean \textbf{vis} to tell if a vertex has been visited or not.
+    
+    To keep each vertex accessible, a simple array is made containing each vertex given by the instance. Also, to simplify each trip's representation, a vector of unsigned integers structure is created using the $cadts\_vector.h$ header file.
+    
+    \item \textbf{Trip}: A trip is simply the route taken from one hotel to another passing through POIs, along with some utility variables. The variables contained by each trip are:
+    \begin{itemize}
+        \item unsigned integer vector \textbf{route}: The route followed in the trip, starting and ending in a hotel and passing through zero or more POIs.
+        \item double \textbf{tot\_len}: total length of the trip, given by the instance, used mostly to assert the validity of each trip.
+        \item double \textbf{rem\_len}: simply said, the remaining length of a trip, used to compute if new POIs can be added to a trip.
+    \end{itemize}
+    It is worth noting that while adding a score variable to each trip was considered, this variable saw very little use, so, when required, it was calculated dynamically by going through every POI in the trip.
+    
+    Since the amount of trips per tour is known from the instance, a tour is simply an array of the number of trips given.
+\end{itemize}
+
+Some other structures appear in the code, like a distances matrix and a candidate POIs vector, but they were just used to ease access to variables and reduce computation times, and are unrelated to the problem's representation itself.
